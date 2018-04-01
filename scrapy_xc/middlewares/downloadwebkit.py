@@ -24,7 +24,8 @@ class HandleRequest(object):
     def process_request(self, request, spider):
         self.driver.get(request.url)
         self.driver.maximize_window()
-        self.dom_change(request["start_date"], request["end_date"])
+        input_item = request.meta["item_info"]
+        self.dom_change(input_item["start_date"], input_item["end_date"])
         self.driver.find_element_by_xpath("//a[@id='changeBtn']").click()
         print u'现在将浏览器最大化'
         time.sleep(3)
