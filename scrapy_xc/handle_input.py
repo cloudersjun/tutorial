@@ -1,10 +1,11 @@
 import time
-from datetime import date
+from datetime import date, timedelta, datetime
 
 import xlrd
+from xlrd import xldate_as_tuple
 
 
-class HanleInput():
+class HandleInput:
     def __init__(self):
         self.now = time.localtime(time.time())
         self.today_str = time.strftime('%Y-%m-%d %H%M%S', self.now)
@@ -17,16 +18,20 @@ class HanleInput():
         name_array = sheets[0].col_values(0)
         self.ret_array = []
         for i in xrange(1, len(name_array)):
-            start_date_value = xlrd.xldate_as_tuple(sheet.col_values(3), data.datemode)
-            start_date = date(*start_date_value[:3]).strftime('%Y-%m-%d')
-            dep_date_value = xlrd.xldate_as_tuple(sheet.col_values(4), data.datemode)
-            dep_date = date(*dep_date_value[:3]).strftime('%Y-%m-%d')
-            ret = {"name": sheet.col_values(0),
-                   "url": sheet.col_values(1),
-                   "room_type": sheet.col_values(2),
-                   "start_date": start_date_value,
-                   "dep_date": dep_date_value,
-                   "default_price": sheet.col_values(5),
-                   "day_offset": int(sheet.col_values(6)),
-                   }
-            self.ret_array.append(ret)
+            start_date = datetime(*xldate_as_tuple(sheet.col_values(3)[i], 0))
+            dep_date = datetime(*xldate_as_tuple(sheet.col_values(4)[i], 0))
+            day_offset = int(sheet.col_values(6)[i])
+            offset_days = timedelta(days=day_offset)
+            temp_date = start_date
+            while temp_date + offset_days <= dep_date:
+                ret = {"name": sheet.col_values(0)[i], "hotel_url": sheet.col_values(1)[i],
+                       "room_type": sheet.col_values(2)[i], "default_price": sheet.col_values(5)[i],
+                       "start_date": temp_date.strftime('%Y-%m-%d'), "end_date": (temp_date + offset_days).strftime('%Y-%m-%d')}
+                self.ret_array.append(ret)
+                temp_date = temp_date + offset_days
+            if temp_date != dep_date:
+                ret = {"name": sheet.col_values(0)[i], "hotel_url": sheet.col_values(1)[i],
+                       "room_type": sheet.col_values(2)[i],
+                       "default_price": sheet.col_values(5)[i], "start_date": (dep_date - offset_days).strftime('%Y-%m-%d'),
+                       "end_date": dep_date.strftime('%Y-%m-%d')}
+                self.ret_array.append(ret)
