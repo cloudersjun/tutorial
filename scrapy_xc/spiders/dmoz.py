@@ -17,7 +17,7 @@ class DmozSpider(scrapy.Spider):
     # allowed_domains = ['dmoz.org']
     # start_urls = ["http://hotels.ctrip.com/hotel/396401.html#ctm_ref=hod_dl_map_ htllst_n_9"]
     print('start init....')
-    file_path = "/Users/yujun/gitPro/tutorial/"
+    file_path = "./"
     file_name = "result.xls"
     handle_input = HandleInput()
     #{"name":，"room_type":,"price_dic":{"date":,"price":}]}
@@ -32,7 +32,7 @@ class DmozSpider(scrapy.Spider):
         for input_item in input_array:
             print(input_item)
             if self.min_date is None or self.min_date > input_item["start_date"]:
-                self.min_date = datetime.strptime(input_item["start_date"], "yyyy-MM-dd")
+                self.min_date = datetime.strptime(input_item["start_date"], "%Y-%m-%d")
             if self.max_date is None or self.max_date < input_item["end_date"]:
                 self.max_date = datetime.strptime(input_item["end_date"], "%Y-%m-%d")
             request = scrapy.Request(url=input_item["hotel_url"], callback=self.parse, dont_filter=True)
@@ -57,4 +57,5 @@ class DmozSpider(scrapy.Spider):
             self.file_header.append(temp_date.strftime("%Y-%m-%d"))
             temp_date += timedelta(days=1)
         handle_output = HandleOutput(self.file_path, self.file_name, self.file_header, self.out_array)
-        handle_output.write()
+        #handle_output.write()
+
