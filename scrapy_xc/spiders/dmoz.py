@@ -20,7 +20,7 @@ class DmozSpider(scrapy.Spider):
     file_path = "./"
     file_name = "result.xls"
     handle_input = HandleInput()
-    #{"name":，"room_type":,"price_dic":{"date":,"price":}]}
+    # {"name":，"room_type":,"price_dic":{"date":,"price":}]}
     out_array = []
     file_header = ["name", "room_type"]
     max_date = None
@@ -29,11 +29,13 @@ class DmozSpider(scrapy.Spider):
     def start_requests(self):
         # handle_input.__init__()
         input_array = self.handle_input.ret_array
+        print  len(input_array)
+        print input_array
         for input_item in input_array:
             print(input_item)
-            if self.min_date is None or self.min_date > input_item["start_date"]:
+            if self.min_date is None or self.min_date > datetime.strptime(input_item["start_date"], "%Y-%m-%d"):
                 self.min_date = datetime.strptime(input_item["start_date"], "%Y-%m-%d")
-            if self.max_date is None or self.max_date < input_item["end_date"]:
+            if self.max_date is None or self.max_date < datetime.strptime(input_item["end_date"], "%Y-%m-%d"):
                 self.max_date = datetime.strptime(input_item["end_date"], "%Y-%m-%d")
             request = scrapy.Request(url=input_item["hotel_url"], callback=self.parse, dont_filter=True)
             request.meta["item_info"] = input_item
@@ -48,7 +50,13 @@ class DmozSpider(scrapy.Spider):
             f.write(response.body)
         for sel in response.xpath("//tr[@brid]"):
             print(sel)
-            self.out_array.append([sel.extract(), "d", "1", "1"])
+            ret_item = {}
+            ret_item['name'] = sel.extract()
+            ret_item['room_type'] = "rrr"
+            ret_item["price_dic"] = {}
+            ret_item["price_dic"]["date"] = "2018-04-03"
+            ret_item["price_dic"]["price"] = 2
+            self.out_array.append(ret_item)
         pass
 
     def close(self, reason):

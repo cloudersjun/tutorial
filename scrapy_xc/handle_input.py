@@ -1,5 +1,5 @@
 import time
-from datetime import date, timedelta, datetime
+from datetime import timedelta, datetime
 
 import xlrd
 from xlrd import xldate_as_tuple
@@ -26,12 +26,14 @@ class HandleInput:
             while temp_date + offset_days <= dep_date:
                 ret = {"name": sheet.col_values(0)[i], "hotel_url": sheet.col_values(1)[i],
                        "room_type": sheet.col_values(2)[i], "default_price": sheet.col_values(5)[i],
-                       "start_date": temp_date.strftime('%Y-%m-%d'), "end_date": (temp_date + offset_days).strftime('%Y-%m-%d')}
+                       "start_date": temp_date.strftime('%Y-%m-%d'),
+                       "end_date": (temp_date + offset_days).strftime('%Y-%m-%d')}
                 self.ret_array.append(ret)
                 temp_date = temp_date + offset_days
             if temp_date != dep_date:
                 ret = {"name": sheet.col_values(0)[i], "hotel_url": sheet.col_values(1)[i],
                        "room_type": sheet.col_values(2)[i],
-                       "default_price": sheet.col_values(5)[i], "start_date": (dep_date - offset_days).strftime('%Y-%m-%d'),
+                       "default_price": sheet.col_values(5)[i],
+                       "start_date": temp_date.strftime('%Y-%m-%d'),
                        "end_date": dep_date.strftime('%Y-%m-%d')}
                 self.ret_array.append(ret)
