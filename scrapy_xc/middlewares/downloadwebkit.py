@@ -13,8 +13,10 @@ logging.basicConfig(filename='logger.log', level=logging.INFO)
 
 class HandleRequest(object):
     def process_request(self, request, spider):
-        spider.driver.get(request.url)
-        spider.driver.maximize_window()
+        print("init browser....")
+        self.driver = webdriver.Chrome(executable_path="/Users/liukaizhao/tutorial/chromedriver")
+        self.driver.get(request.url)
+        self.driver.maximize_window()
         input_item = request.meta["item_info"]
         self.dom_change(input_item["start_date"], input_item["end_date"], spider.driver)
         spider.driver.find_element_by_xpath("//a[@id='changeBtn']").click()
