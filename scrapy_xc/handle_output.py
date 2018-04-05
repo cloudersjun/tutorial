@@ -40,9 +40,6 @@ class HandleOutput():
                         self.color_cell(sheet, row, i, 2500)
                     else:
                         sheet.write(row, i, price)
-
-            for col in xrange(0, len(result)):
-                sheet.write(row, col, result[col].decode('utf-8'))
             row += 1
         book.save(self.output_path + self.output_file_name)
 

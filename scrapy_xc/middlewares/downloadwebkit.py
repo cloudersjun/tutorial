@@ -16,7 +16,7 @@ class HandleRequest(object):
 
     def process_request(self, request, spider):
         print("init browser....")
-        self.driver = webdriver.Chrome(executable_path="chromedriver")
+        self.driver = webdriver.Chrome(executable_path="/Users/yujun/gitPro/tutorial/chromedriver")
         self.driver.get(request.url)
         self.driver.maximize_window()
         input_item = request.meta["item_info"]
