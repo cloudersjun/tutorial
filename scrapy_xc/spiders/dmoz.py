@@ -20,13 +20,8 @@ sys.setdefaultencoding('utf8')
 
 class DmozSpider(scrapy.Spider):
     name = 'dmoz'
-    # allowed_domains = ['dmoz.org']
-    # start_urls = ["http://hotels.ctrip.com/hotel/396401.html#ctm_ref=hod_dl_map_ htllst_n_9"]
-    print('start init....')
     file_path = "./"
-    file_name = "result.xls"
     logging.info('start init....')
-    file_path = "/Users/yujun/gitPro/tutorial/"
     file_name = "result.xlsx"
     handle_input = HandleInput()
     # {"name":，"room_type":,"price_dic":{"date":,"price":}]}
@@ -61,10 +56,10 @@ class DmozSpider(scrapy.Spider):
     def parse(self, response):
         input_item = response.meta["item_info"]
         logging.debug(input_item)
-        with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
-                  'w') as f:
-            f.write(response.body)
-        parse = HandleParse(self,response,datetime.strptime(input_item["start_date"], "%Y-%m-%d"),datetime.strptime(input_item["end_date"], "%Y-%m-%d"),input_item["name"],input_item["room_type"])
+        # with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
+        #           'w') as f:
+        #     f.write(response.body)
+        parse = HandleParse(response,datetime.strptime(input_item["start_date"], "%Y-%m-%d"),datetime.strptime(input_item["end_date"], "%Y-%m-%d"),input_item["name"],input_item["room_type"])
         parse.parse(self.out_array)
 
     def close(self, reason):
@@ -74,9 +69,6 @@ class DmozSpider(scrapy.Spider):
         while temp_date <= self.max_date:
             self.file_header.append(temp_date.strftime("%Y-%m-%d"))
             temp_date += timedelta(days=1)
-        handle_output = HandleOutput(self.file_path, self.file_name, self.file_header, self.out_array)
-        #handle_output.write()
-
         logging.debug(self.out_map)
         handle_output = HandleOutput(self.file_path, self.file_name, self.file_header, self.out_map,
                                      self.input_array)
