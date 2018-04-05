@@ -7,6 +7,7 @@ from scrapy.conf import settings
 
 from scrapy_xc.handle_input import HandleInput
 from scrapy_xc.handle_output import HandleOutput
+from scrapy_xc.handler_parse import HandleParse
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -21,7 +22,7 @@ class DmozSpider(scrapy.Spider):
     file_name = "result.xls"
     handle_input = HandleInput()
     # {"name":，"room_type":,"price_dic":{"date":,"price":}]}
-    out_array = []
+    out_array = {}
     file_header = ["name", "room_type"]
     max_date = None
     min_date = None
@@ -48,16 +49,8 @@ class DmozSpider(scrapy.Spider):
         with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
                   'w') as f:
             f.write(response.body)
-        for sel in response.xpath("//tr[@brid]"):
-            print(sel)
-            ret_item = {}
-            ret_item['name'] = sel.extract()
-            ret_item['room_type'] = "rrr"
-            ret_item["price_dic"] = {}
-            ret_item["price_dic"]["date"] = "2018-04-03"
-            ret_item["price_dic"]["price"] = 2
-            self.out_array.append(ret_item)
-        pass
+        parse = HandleParse(self,response,datetime.strptime(input_item["start_date"], "%Y-%m-%d"),datetime.strptime(input_item["end_date"], "%Y-%m-%d"),input_item["name"],input_item["room_type"])
+        parse.parse(self.out_array)
 
     def close(self, reason):
         temp_date = self.min_date
