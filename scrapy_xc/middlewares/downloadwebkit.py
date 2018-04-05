@@ -1,46 +1,43 @@
 # coding=utf-8
-import pyquery
-import time
-import BeautifulSoup
 import sys
+import time
 
 reload(sys)
 sys.setdefaultencoding('utf8')
 from scrapy.http import HtmlResponse
 from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains  # 引入ActionChains鼠标操作类
-from selenium.webdriver.common.keys import Keys  # 引入keys类操作
-from chardet import detect
 from scrapy.conf import settings
 
 
 class HandleRequest(object):
     def __init__(self):
-        print("init browser....")
-        # self.driver = webdriver.PhantomJS()
-        # time.sleep(5)
-        self.driver = webdriver.PhantomJS(executable_path="phantomjs.exe")
+        diver = None
+        pass
 
     def process_request(self, request, spider):
+        print("init browser....")
+        self.driver = webdriver.Chrome(executable_path="tutorial/chromedriver")
         self.driver.get(request.url)
         self.driver.maximize_window()
         input_item = request.meta["item_info"]
         self.dom_change(input_item["start_date"], input_item["end_date"])
         self.driver.find_element_by_xpath("//a[@id='changeBtn']").click()
-        print u'现在将浏览器最大化'
         time.sleep(3)
         string = self.driver.page_source
         # 编码处
         print type(string)
         string = string.decode("utf-8", "ignore").encode("utf-8", "ignore")
-        renderedBody = string
+        rendered_body = string
         if settings["DEBUG"]:
-            print(renderedBody)
-        return HtmlResponse(request.url, body=renderedBody, encoding='utf-8')
+            print(rendered_body)
+        return HtmlResponse(request.url, body=rendered_body, encoding='utf-8')
 
-    def spider_closed(self):
-        print("close driver....")
+    def process_response(self, request, response, spider):
+        div_dom = response.xpath("//div[@id='hotelRoomBox']").extract()
+        print ('close driver......')
         self.driver.close()
+        return HtmlResponse(request.url, body=str(div_dom[0]).decode("utf-8", "ignore").encode("utf-8", "ignore"),
+                            encoding='utf-8')
 
     def dom_change(self, start_date, end_date):
         start_dom = self.driver.find_element_by_xpath("//input[@id='cc_txtCheckIn']")
@@ -48,4 +45,4 @@ class HandleRequest(object):
         start_dom.send_keys(start_date)
         end_dom = self.driver.find_element_by_xpath("//input[@id='cc_txtCheckOut']")
         end_dom.clear()
-        self.keys = end_dom.send_keys(end_date)
+        end_dom.send_keys(end_date)
