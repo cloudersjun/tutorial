@@ -30,7 +30,6 @@ class DmozSpider(scrapy.Spider):
     file_name = "result.xlsx"
     handle_input = HandleInput()
     # {"name":，"room_type":,"price_dic":{"date":,"price":}]}
-    out_array = {}
     out_map = {}
     file_header = ["name", "room_type"]
     max_date = None
@@ -64,8 +63,8 @@ class DmozSpider(scrapy.Spider):
         with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
                   'w') as f:
             f.write(response.body)
-        parse = HandleParse(self,response,datetime.strptime(input_item["start_date"], "%Y-%m-%d"),datetime.strptime(input_item["end_date"], "%Y-%m-%d"),input_item["name"],input_item["room_type"])
-        parse.parse(self.out_array)
+        parse = HandleParse(response,datetime.strptime(input_item["start_date"], "%Y-%m-%d"),datetime.strptime(input_item["end_date"], "%Y-%m-%d"),input_item["name"],input_item["room_type"])
+        parse.parse(self.out_map)
 
     def close(self, reason):
         logging.info('close driver......')
@@ -74,8 +73,6 @@ class DmozSpider(scrapy.Spider):
         while temp_date <= self.max_date:
             self.file_header.append(temp_date.strftime("%Y-%m-%d"))
             temp_date += timedelta(days=1)
-        handle_output = HandleOutput(self.file_path, self.file_name, self.file_header, self.out_array)
-        #handle_output.write()
 
         logging.debug(self.out_map)
         handle_output = HandleOutput(self.file_path, self.file_name, self.file_header, self.out_map,
