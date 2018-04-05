@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
+from datetime import datetime, timedelta
 
 import scrapy
 from scrapy.conf import settings
@@ -19,13 +20,21 @@ class DmozSpider(scrapy.Spider):
     file_path = "/Users/yujun/gitPro/tutorial/"
     file_name = "result.xls"
     handle_input = HandleInput()
+    #{"name":，"room_type":,"price_dic":{"date":,"price":}]}
     out_array = []
+    file_header = ["name", "room_type"]
+    max_date = None
+    min_date = None
 
     def start_requests(self):
         # handle_input.__init__()
-        inpu_array = self.handle_input.ret_array
-        for input_item in inpu_array:
+        input_array = self.handle_input.ret_array
+        for input_item in input_array:
             print(input_item)
+            if self.min_date is None or self.min_date > input_item["start_date"]:
+                self.min_date = datetime.strptime(input_item["start_date"], "yyyy-MM-dd")
+            if self.max_date is None or self.max_date < input_item["end_date"]:
+                self.max_date = datetime.strptime(input_item["end_date"], "%Y-%m-%d")
             request = scrapy.Request(url=input_item["hotel_url"], callback=self.parse, dont_filter=True)
             request.meta["item_info"] = input_item
             yield request
@@ -43,6 +52,9 @@ class DmozSpider(scrapy.Spider):
         pass
 
     def close(self, reason):
-        handle_output = HandleOutput(self.file_path, self.file_name, ["name", "date", "room_type", "price"],
-                                     self.out_array)
+        temp_date = self.min_date
+        while temp_date <= self.max_date:
+            self.file_header.append(temp_date.strftime("%Y-%m-%d"))
+            temp_date += timedelta(days=1)
+        handle_output = HandleOutput(self.file_path, self.file_name, self.file_header, self.out_array)
         handle_output.write()
