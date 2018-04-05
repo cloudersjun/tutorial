@@ -46,6 +46,8 @@ DEFAULT_REQUEST_HEADERS = {
     'Referer': 'http://www.google.com'
 }
 
+IPPOOL=[]
+
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 # SPIDER_MIDDLEWARES = {
