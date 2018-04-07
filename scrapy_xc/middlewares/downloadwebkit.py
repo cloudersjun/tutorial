@@ -15,7 +15,6 @@ class HandleRequest(object):
     def process_request(self, request, spider):
         print("init browser....")
         spider.driver.get(request.url)
-        spider.driver.maximize_window()
         input_item = request.meta["item_info"]
         self.dom_change(input_item["start_date"], input_item["end_date"], spider.driver)
         spider.driver.find_element_by_xpath("//a[@id='changeBtn']").click()

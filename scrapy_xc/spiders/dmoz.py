@@ -2,6 +2,7 @@
 import logging
 import sys
 from datetime import datetime, timedelta
+import time
 
 import scrapy
 from selenium import webdriver
@@ -37,6 +38,8 @@ class DmozSpider(scrapy.Spider):
     chrome_options.add_experimental_option("prefs", prefs)
     driver = webdriver.Chrome(executable_path="/Users/yujun/gitPro/tutorial/chromedriver",
                               chrome_options=chrome_options)
+
+    driver.maximize_window()
     input_array = handle_input.ret_array
 
     def start_requests(self):
@@ -55,11 +58,11 @@ class DmozSpider(scrapy.Spider):
     def parse(self, response):
         input_item = response.meta["item_info"]
         logging.debug(input_item)
-        # with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
-        #           'w') as f:
-        #     f.write(response.body)
-        parse = HandleParse(response,datetime.strptime(input_item["start_date"], "%Y-%m-%d"),datetime.strptime(input_item["end_date"], "%Y-%m-%d"),input_item["name"],input_item["room_type"])
-        parse.parse(self.out_array)
+        with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
+                  'w') as f:
+            f.write(response.body)
+        # parse = HandleParse(response,datetime.strptime(input_item["start_date"], "%Y-%m-%d"),datetime.strptime(input_item["end_date"], "%Y-%m-%d"),input_item["name"],input_item["room_type"])
+        # parse.parse(self.out_array)
 
     def close(self, reason):
         logging.info('close driver......')
