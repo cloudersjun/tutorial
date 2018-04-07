@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 import scrapy
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from scrapy.crawler import CrawlerProcess
+from scrapy.utils.project import get_project_settings
 
 from scrapy_xc.handle_input import HandleInput
 from scrapy_xc.handle_output import HandleOutput
@@ -35,13 +37,13 @@ class DmozSpider(scrapy.Spider):
     # 不加载图片
     prefs = {"profile.managed_default_content_settings.images": 2}
     chrome_options.add_experimental_option("prefs", prefs)
-    driver = webdriver.Chrome(executable_path="/Users/yujun/gitPro/tutorial/chromedriver",
+    driver = webdriver.Chrome(executable_path="F:\\Git\\tutorial\\chromedriver.exe",
                               chrome_options=chrome_options)
     input_array = handle_input.ret_array
 
     def start_requests(self):
-        logging.info(len(self.input_array))
-        logging.debug(self.input_array)
+        #logging.info(len(self.input_array))
+        #logging.debug(self.input_array)
         for input_item in self.input_array:
             logging.info(input_item)
             if self.min_date is None or self.min_date > datetime.strptime(input_item["start_date"], "%Y-%m-%d"):
@@ -54,12 +56,12 @@ class DmozSpider(scrapy.Spider):
 
     def parse(self, response):
         input_item = response.meta["item_info"]
-        logging.debug(input_item)
+        #logging.debug(input_item)
         # with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
         #           'w') as f:
         #     f.write(response.body)
         parse = HandleParse(response,datetime.strptime(input_item["start_date"], "%Y-%m-%d"),datetime.strptime(input_item["end_date"], "%Y-%m-%d"),input_item["name"],input_item["room_type"])
-        parse.parse(self.out_array)
+        parse.parse(self.out_map)
 
     def close(self, reason):
         logging.info('close driver......')
@@ -72,3 +74,8 @@ class DmozSpider(scrapy.Spider):
         handle_output = HandleOutput(self.file_path, self.file_name, self.file_header, self.out_map,
                                      self.input_array)
         handle_output.write()
+
+settings = get_project_settings()
+process = CrawlerProcess(settings)
+process.crawl(DmozSpider)
+process.start()
