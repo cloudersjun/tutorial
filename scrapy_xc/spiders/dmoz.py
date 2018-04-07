@@ -2,16 +2,73 @@
 import logging
 import sys
 from datetime import datetime, timedelta
+import time
 
-import scrapy
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from scrapy.crawler import CrawlerProcess
-from scrapy.utils.project import get_project_settings
-
+from scrapy_xc import settings
 from scrapy_xc.handle_input import HandleInput
 from scrapy_xc.handle_output import HandleOutput
 from scrapy_xc.handler_parse import HandleParse
+
+import scrapy
+from scrapy.crawler import CrawlerProcess
+from scrapy.utils.project import get_project_settings
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+import scrapy.utils.project
+import scrapy.utils.engine
+import scrapy.utils.template
+import scrapy.utils.python
+import scrapy.utils.deprecate
+import scrapy.spiderloader
+import scrapy.statscollectors
+import scrapy.logformatter
+import scrapy.extensions.closespider
+import scrapy.extensions.feedexport
+import scrapy.extensions.memdebug
+import scrapy.extensions.memusage
+import scrapy.extensions.logstats
+import scrapy.extensions.telnet
+import scrapy.extensions.corestats
+import scrapy.extensions.spiderstate
+import scrapy.extensions.throttle
+import scrapy.extensions.debug
+import scrapy.extensions.httpcache
+import scrapy.extensions.statsmailer
+import scrapy.core.scheduler
+import scrapy.core.downloader
+import scrapy.core.engine
+import scrapy.core.scraper
+import scrapy.core.spidermw
+import scrapy.downloadermiddlewares.robotstxt
+import scrapy.downloadermiddlewares.retry
+import scrapy.downloadermiddlewares.stats
+import scrapy.downloadermiddlewares.cookies
+import scrapy.downloadermiddlewares.decompression
+import scrapy.downloadermiddlewares.httpauth
+import scrapy.downloadermiddlewares.httpproxy
+import scrapy.downloadermiddlewares.downloadtimeout
+import scrapy.downloadermiddlewares.defaultheaders
+import scrapy.downloadermiddlewares.httpcache
+import scrapy.downloadermiddlewares.ajaxcrawl
+import scrapy.downloadermiddlewares.useragent
+import scrapy.downloadermiddlewares.redirect
+import scrapy.downloadermiddlewares.httpcompression
+import scrapy.spidermiddlewares.httperror
+import scrapy.spidermiddlewares.depth
+import scrapy.spidermiddlewares.offsite
+import scrapy.spidermiddlewares.referer
+import scrapy.spidermiddlewares.urllength
+import scrapy.pipelines
+import scrapy.dupefilters
+import scrapy.squeues
+import scrapy.core.downloader.handlers.http
+import scrapy.core.downloader.contextfactory
+import scrapy.core.downloader.middleware
+import scrapy.utils.conf
+import scrapy.exceptions
+import scrapy_xc.spiders
+import scrapy_xc.middlewares.downloadwebkit
+
 
 # 通过下面的方式进行简单配置输出方式与日志级别
 logging.basicConfig(filename='logger.log', level=logging.INFO)
@@ -37,8 +94,10 @@ class DmozSpider(scrapy.Spider):
     # 不加载图片
     prefs = {"profile.managed_default_content_settings.images": 2}
     chrome_options.add_experimental_option("prefs", prefs)
-    driver = webdriver.Chrome(executable_path="F:\\Git\\tutorial\\chromedriver.exe",
+    driver = webdriver.Chrome(executable_path="chromedriver.exe",
                               chrome_options=chrome_options)
+
+    # driver.maximize_window()
     input_array = handle_input.ret_array
 
     def start_requests(self):
@@ -70,7 +129,7 @@ class DmozSpider(scrapy.Spider):
         while temp_date <= self.max_date:
             self.file_header.append(temp_date.strftime("%Y-%m-%d"))
             temp_date += timedelta(days=1)
-        logging.debug(self.out_map)
+        # logging.debug(self.out_map)
         handle_output = HandleOutput(self.file_path, self.file_name, self.file_header, self.out_map,
                                      self.input_array)
         handle_output.write()
