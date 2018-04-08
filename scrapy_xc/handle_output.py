@@ -37,31 +37,29 @@ class HandleOutput:
             if already_set.__contains__(room_name):
                 continue
             else:
-                room_parse_info = self.result_map.get(room_name)
-                if room_parse_info is None:
+                price_info_map = self.result_map.get(room_name)
+                if price_info_map is None:
                     self.handle_no_result(sheet, row, room_input_info, red_format)
                 else:
                     sheet.write(row, 0, room_name)
                     sheet.write(row, 1, room_input_info["room_type"])
                     for i in xrange(2, len(self.header)):
                         price_date = self.header[i]
-                        price_info_map = room_parse_info[""]
-                        if price_info_map is None:
+                        if price_info_map is None or price_info_map.get(price_date) is None:
                             self.handle_no_result(sheet, row, room_input_info, red_format)
-                        if price_info_map.get(price_date) is not None:
+                        else:
                             price_info = price_info_map.get(price_date)
                             price = price_info["price"]
                             if price == -1:
                                 sheet.write(row, i, 2500, red_format)
                                 pass
                             else:
-                                room_type = price_info["room_type"]
+                                room_type = price_info["type"]
                                 if room_type == room_input_info["room_type"]:
                                     sheet.write(row, i, price)
                                 else:
                                     sheet.write(row, i, price)
-                                    # sheet.write_comment(row, i, price_info[''])
-                                    sheet.write_comment(row, i, "comment")
+                                    sheet.write_comment(row, i,  room_type)
 
             already_set.add(room_name)
             row += 1
