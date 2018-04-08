@@ -119,7 +119,7 @@ class DmozSpider(scrapy.Spider):
         with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
                   'w') as f:
             f.write(response.body)
-        parse = HandleParse(response,datetime.strptime(input_item["start_date"], "%Y-%m-%d"),datetime.strptime(input_item["end_date"], "%Y-%m-%d"),input_item["name"],input_item["room_type"])
+        parse = HandleParse(response,datetime.strptime(input_item["start_date"], "%Y-%m-%d"),datetime.strptime(input_item["end_date"], "%Y-%m-%d"),input_item["room_type"],input_item["name"])
         parse.parse(self.out_map)
 
     def close(self, reason):
