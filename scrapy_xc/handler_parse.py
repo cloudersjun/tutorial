@@ -118,7 +118,7 @@ class HandleParse():
             else:
                 if(date_roomtype_minPrice_dic[date_str].has_key(min_room_type)):
                     out_dic[self.name][date_str]["price"] = date_roomtype_minPrice_dic[date_str][min_room_type]
-                    out_dic[self.name][date_str]["type"] = date_roomtype_minPrice_dic[date_str][min_room_type]
+                    out_dic[self.name][date_str]["type"] = min_room_type
                 else:
                     out_dic[self.name][date_str]["price"] = "-1"
                     out_dic[self.name][date_str]["type"] = self.room_type
