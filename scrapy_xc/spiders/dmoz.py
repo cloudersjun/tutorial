@@ -2,6 +2,8 @@
 import logging
 import sys
 from datetime import datetime, timedelta
+from scrapy.crawler import CrawlerProcess
+from scrapy.utils.project import get_project_settings
 
 import scrapy
 from selenium import webdriver
@@ -35,7 +37,7 @@ class DmozSpider(scrapy.Spider):
     # 不加载图片
     prefs = {"profile.managed_default_content_settings.images": 2}
     chrome_options.add_experimental_option("prefs", prefs)
-    driver = webdriver.Chrome(executable_path="/Users/yujun/gitPro/tutorial/chromedriver",
+    driver = webdriver.Chrome(executable_path="/Users/liukaizhao/tutorial/chromedriver",
                               chrome_options=chrome_options)
     input_array = handle_input.ret_array
 
@@ -54,12 +56,12 @@ class DmozSpider(scrapy.Spider):
 
     def parse(self, response):
         input_item = response.meta["item_info"]
-        logging.debug(input_item)
+        #logging.debug(input_item)
         # with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
         #           'w') as f:
         #     f.write(response.body)
         parse = HandleParse(response,datetime.strptime(input_item["start_date"], "%Y-%m-%d"),datetime.strptime(input_item["end_date"], "%Y-%m-%d"),input_item["name"],input_item["room_type"])
-        parse.parse(self.out_array)
+        parse.parse(self.out_map)
 
     def close(self, reason):
         logging.info('close driver......')
@@ -72,3 +74,8 @@ class DmozSpider(scrapy.Spider):
         handle_output = HandleOutput(self.file_path, self.file_name, self.file_header, self.out_map,
                                      self.input_array)
         handle_output.write()
+
+settings = get_project_settings()
+process = CrawlerProcess(settings)
+process.crawl(DmozSpider)
+process.start()
