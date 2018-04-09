@@ -117,9 +117,9 @@ class DmozSpider(scrapy.Spider):
     def parse(self, response):
         input_item = response.meta["item_info"]
         #logging.debug(input_item)
-        with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
-                  'w') as f:
-            f.write(response.body)
+        # with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
+        #           'w') as f:
+        #     f.write(response.body)
         parse = HandleParse(response,datetime.strptime(input_item["start_date"], "%Y-%m-%d"),datetime.strptime(input_item["end_date"], "%Y-%m-%d"),input_item["room_type"],input_item["name"])
         parse.parse(out_map)
 
@@ -127,7 +127,7 @@ class DmozSpider(scrapy.Spider):
         logging.info('close driver......')
         self.driver.close()
         temp_date = self.min_date
-        while temp_date <= self.max_date:
+        while temp_date < self.max_date:
             self.file_header.append(temp_date.strftime("%Y-%m-%d"))
             temp_date += timedelta(days=1)
         # logging.debug(self.out_map)

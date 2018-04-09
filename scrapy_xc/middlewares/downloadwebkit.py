@@ -17,7 +17,7 @@ class HandleRequest(object):
         input_item = request.meta["item_info"]
         self.dom_change(input_item["start_date"], input_item["end_date"], spider.driver)
         spider.driver.find_element_by_xpath("//a[@id='changeBtn']").click()
-        time.sleep(3)
+        time.sleep(5)
         string = spider.driver.page_source
         #logging.info(type(string))
         string = string.decode("utf-8", "ignore").encode("utf-8", "ignore")
