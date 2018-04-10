@@ -2,3 +2,4 @@
 2.driver放在Python文件夹下
 3.pyinstall dmoz.py
 4.需要一个Chrome安装包，具体版本待定
+5.setting.cfg需要加进去
