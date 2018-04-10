@@ -130,7 +130,7 @@ class DmozSpider(scrapy.Spider):
         while temp_date < self.max_date:
             self.file_header.append(temp_date.strftime("%Y-%m-%d"))
             temp_date += timedelta(days=1)
-        logging.debug("解析结果dic:"+str(out_map))
+        logging.debug(u"解析结果dic:"+str(out_map))
         handle_output = HandleOutput(self.file_path, self.file_name, self.file_header, out_map,
                                      self.input_array)
         handle_output.write()

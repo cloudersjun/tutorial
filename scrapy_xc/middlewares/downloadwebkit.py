@@ -28,11 +28,12 @@ class HandleRequest(object):
     def process_response(self, request, response, spider):
         div_dom = response.xpath("//div[@id='hotelRoomBox']").extract()
         #logging.debug("提取到酒店房间数组：{}"+str(div_dom))
-        logging.debug("提取到酒店房间数组：{}"+str(div_dom))
+        logging.debug(u"提取到酒店房间数组：{}"+str(div_dom))
         return HtmlResponse(request.url, body=str(div_dom[0]).decode("utf-8", "ignore").encode("utf-8", "ignore"),
                             encoding='utf-8')
 
     def dom_change(self, start_date, end_date, driver):
+        logging.debug(u"操作dom.....")
         start_dom = driver.find_element_by_xpath("//input[@id='cc_txtCheckIn']")
         start_dom.clear()
         start_dom.send_keys(start_date)
