@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import logging
-import sys
 from datetime import datetime, timedelta
 import time
 
-from scrapy_xc import settings
+import sys
 from scrapy_xc.handle_input import HandleInput
 from scrapy_xc.handle_output import HandleOutput
 from scrapy_xc.handler_parse import HandleParse
