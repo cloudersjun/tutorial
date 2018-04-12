@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import logging
-import sys
 from datetime import datetime, timedelta
 import time
 
-from scrapy_xc import settings
+import sys
 from scrapy_xc.handle_input import HandleInput
 from scrapy_xc.handle_output import HandleOutput
 from scrapy_xc.handler_parse import HandleParse
@@ -127,10 +126,10 @@ class DmozSpider(scrapy.Spider):
         logging.info('close driver......')
         self.driver.close()
         temp_date = self.min_date
-        while temp_date <= self.max_date:
+        while temp_date < self.max_date:
             self.file_header.append(temp_date.strftime("%Y-%m-%d"))
             temp_date += timedelta(days=1)
-        # logging.debug(self.out_map)
+        logging.debug(u"解析结果dic:"+str(out_map))
         handle_output = HandleOutput(self.file_path, self.file_name, self.file_header, out_map,
                                      self.input_array)
         handle_output.write()

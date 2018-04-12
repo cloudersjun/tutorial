@@ -50,7 +50,7 @@ class HandleOutput:
                         else:
                             price_info = price_info_map.get(price_date)
                             price = price_info["price"]
-                            if price == -1:
+                            if int(price) == -1:
                                 sheet.write(row, i, 2500, red_format)
                                 pass
                             else:
