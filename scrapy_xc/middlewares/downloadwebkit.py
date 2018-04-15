@@ -7,8 +7,6 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 from scrapy.http import HtmlResponse
 
-# 通过下面的方式进行简单配置输出方式与日志级别
-logging.basicConfig(filename='logger.log', level=logging.INFO)
 
 
 class HandleRequest(object):
@@ -28,7 +26,6 @@ class HandleRequest(object):
     def process_response(self, request, response, spider):
         div_dom = response.xpath("//div[@id='hotelRoomBox']").extract()
         #logging.debug("提取到酒店房间数组：{}"+str(div_dom))
-        logging.debug(u"提取到酒店房间数组：{}"+str(div_dom))
         return HtmlResponse(request.url, body=str(div_dom[0]).decode("utf-8", "ignore").encode("utf-8", "ignore"),
                             encoding='utf-8')
 

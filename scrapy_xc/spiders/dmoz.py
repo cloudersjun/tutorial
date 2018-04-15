@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+import json
 import logging
 from datetime import datetime, timedelta
-import time
 
 import sys
 from scrapy_xc.handle_input import HandleInput
@@ -70,7 +70,11 @@ import scrapy_xc.middlewares.downloadwebkit
 
 
 # 通过下面的方式进行简单配置输出方式与日志级别
-logging.basicConfig(filename='logger.log', level=logging.INFO)
+logging.basicConfig(filename='logger.log', level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s : %(levelname)s : %(message)s',
+                    datefmt='%Y-m%-D% %H:%M:%S',
+                    filemode='w'
+                    )
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -94,17 +98,15 @@ class DmozSpider(scrapy.Spider):
     # 不加载图片
     prefs = {"profile.managed_default_content_settings.images": 2}
     chrome_options.add_experimental_option("prefs", prefs)
-    driver = webdriver.Chrome(executable_path="chromedriver.exe",
+    driver = webdriver.Chrome(executable_path="./chromedriver",
                               chrome_options=chrome_options)
 
     # driver.maximize_window()
     input_array = handle_input.ret_array
 
     def start_requests(self):
-        #logging.info(len(self.input_array))
-        #logging.debug(self.input_array)
+        logging.info(u"爬取输入数组:" + json.dumps(self.input_array, ensure_ascii=False, encoding="gb2312"))
         for input_item in self.input_array:
-            logging.info(input_item)
             if self.min_date is None or self.min_date > datetime.strptime(input_item["start_date"], "%Y-%m-%d"):
                 self.min_date = datetime.strptime(input_item["start_date"], "%Y-%m-%d")
             if self.max_date is None or self.max_date < datetime.strptime(input_item["end_date"], "%Y-%m-%d"):
@@ -115,11 +117,14 @@ class DmozSpider(scrapy.Spider):
 
     def parse(self, response):
         input_item = response.meta["item_info"]
-        #logging.debug(input_item)
-        # with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
-        #           'w') as f:
-        #     f.write(response.body)
-        parse = HandleParse(response,datetime.strptime(input_item["start_date"], "%Y-%m-%d"),datetime.strptime(input_item["end_date"], "%Y-%m-%d"),input_item["room_type"],input_item["name"])
+        # logging.debug(input_item)
+        if input_item["name"] == '国家会展中心上海洲际酒店':
+            with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
+                      'w') as f:
+                f.write(response.body)
+        parse = HandleParse(response, datetime.strptime(input_item["start_date"], "%Y-%m-%d"),
+                            datetime.strptime(input_item["end_date"], "%Y-%m-%d"), input_item["room_type"],
+                            input_item["name"])
         parse.parse(out_map)
 
     def close(self, reason):
@@ -129,10 +134,11 @@ class DmozSpider(scrapy.Spider):
         while temp_date < self.max_date:
             self.file_header.append(temp_date.strftime("%Y-%m-%d"))
             temp_date += timedelta(days=1)
-        logging.debug(u"解析结果dic:"+str(out_map))
+        logging.info(u"解析结果dic:" + json.dumps(out_map, ensure_ascii=False, encoding="gb2312"))
         handle_output = HandleOutput(self.file_path, self.file_name, self.file_header, out_map,
                                      self.input_array)
         handle_output.write()
+
 
 settings = get_project_settings()
 process = CrawlerProcess(settings)
