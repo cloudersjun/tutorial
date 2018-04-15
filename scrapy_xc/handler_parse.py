@@ -109,16 +109,18 @@ class HandleParse():
         return float(re.findall(r"\d+\.?\d*", str)[0])
 
     def write_to_out_dic(self,date_roomtype_minPrice_dic,out_dic,min_room_type):
-        out_dic[self.name]={}
+        if(not out_dic.has_key(self.name)):
+            out_dic[self.name]={}
         for date_str in date_roomtype_minPrice_dic:
-            out_dic[self.name][date_str]={}
+            if(not out_dic[self.name].has_key(date_str)):
+                out_dic[self.name][date_str]={}
             if (date_roomtype_minPrice_dic[date_str].has_key(self.room_type)):
                 out_dic[self.name][date_str]["price"]=date_roomtype_minPrice_dic[date_str][self.room_type]
                 out_dic[self.name][date_str]["type"]=self.room_type
             else:
                 if(date_roomtype_minPrice_dic[date_str].has_key(min_room_type)):
                     out_dic[self.name][date_str]["price"] = date_roomtype_minPrice_dic[date_str][min_room_type]
-                    out_dic[self.name][date_str]["type"] = date_roomtype_minPrice_dic[date_str][min_room_type]
+                    out_dic[self.name][date_str]["type"] = min_room_type
                 else:
                     out_dic[self.name][date_str]["price"] = "-1"
                     out_dic[self.name][date_str]["type"] = self.room_type
