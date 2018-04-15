@@ -8,7 +8,6 @@ sys.setdefaultencoding('utf8')
 from scrapy.http import HtmlResponse
 
 
-
 class HandleRequest(object):
     def process_request(self, request, spider):
         spider.driver.get(request.url)
@@ -17,15 +16,15 @@ class HandleRequest(object):
         spider.driver.find_element_by_xpath("//a[@id='changeBtn']").click()
         time.sleep(5)
         string = spider.driver.page_source
-        #logging.info(type(string))
+        # logging.info(type(string))
         string = string.decode("utf-8", "ignore").encode("utf-8", "ignore")
         rendered_body = string
-        #logging.debug(rendered_body)
+        # logging.debug(rendered_body)
         return HtmlResponse(request.url, body=rendered_body, encoding='utf-8')
 
     def process_response(self, request, response, spider):
         div_dom = response.xpath("//div[@id='hotelRoomBox']").extract()
-        #logging.debug("提取到酒店房间数组：{}"+str(div_dom))
+        # logging.debug("提取到酒店房间数组：{}"+str(div_dom))
         return HtmlResponse(request.url, body=str(div_dom[0]).decode("utf-8", "ignore").encode("utf-8", "ignore"),
                             encoding='utf-8')
 

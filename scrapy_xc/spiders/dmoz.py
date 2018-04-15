@@ -96,10 +96,10 @@ class DmozSpider(scrapy.Spider):
     chrome_options = Options()
     # chrome_options.set_headless(True)
     # 不加载图片
-    #prefs = {"profile.managed_default_content_settings.images": 2}
-    #chrome_options.add_experimental_option("prefs", prefs)
-    #driver = webdriver.Chrome(executable_path="./chromedriver",chrome_options=chrome_options)
-    driver = webdriver.Chrome(executable_path="./chromedriver")
+    # prefs = {"profile.managed_default_content_settings.images": 2}
+    # chrome_options.add_experimental_option("prefs", prefs)
+    driver = webdriver.Chrome(executable_path="./chromedriver",chrome_options=chrome_options)
+    # driver = webdriver.Chrome(executable_path="./chromedriver")
 
     # driver.maximize_window()
     input_array = handle_input.ret_array
@@ -112,13 +112,18 @@ class DmozSpider(scrapy.Spider):
             if self.max_date is None or self.max_date < datetime.strptime(input_item["end_date"], "%Y-%m-%d"):
                 self.max_date = datetime.strptime(input_item["end_date"], "%Y-%m-%d")
             request = scrapy.Request(url=input_item["hotel_url"], callback=self.parse, dont_filter=True)
+            referer = str(input_item['hotel_url']).split('#')[0]
+            logging.info("referer:"+referer)
+            request.headers.appendlist('Referer',referer)
             request.meta["item_info"] = input_item
             yield request
 
     def parse(self, response):
         input_item = response.meta["item_info"]
         # logging.debug(input_item)
-        if input_item["name"] == '国家会展中心上海洲际酒店':
+        if input_item["name"] == '上海中航虹桥机场泊悦酒店(中国国际航空公司)' \
+                or input_item["name"]=='上海新虹桥希尔顿花园酒店' \
+                or input_item['name']=='希岸酒店(上海虹桥机场国展中心店)':
             with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
                       'w') as f:
                 f.write(response.body)
@@ -128,8 +133,6 @@ class DmozSpider(scrapy.Spider):
         parse.parse(out_map)
 
     def close(self, reason):
-        logging.info('close driver......')
-        self.driver.close()
         temp_date = self.min_date
         while temp_date < self.max_date:
             self.file_header.append(temp_date.strftime("%Y-%m-%d"))
