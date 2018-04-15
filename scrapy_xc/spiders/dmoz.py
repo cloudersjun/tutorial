@@ -96,10 +96,10 @@ class DmozSpider(scrapy.Spider):
     chrome_options = Options()
     # chrome_options.set_headless(True)
     # 不加载图片
-    prefs = {"profile.managed_default_content_settings.images": 2}
-    chrome_options.add_experimental_option("prefs", prefs)
-    driver = webdriver.Chrome(executable_path="./chromedriver",
-                              chrome_options=chrome_options)
+    #prefs = {"profile.managed_default_content_settings.images": 2}
+    #chrome_options.add_experimental_option("prefs", prefs)
+    #driver = webdriver.Chrome(executable_path="./chromedriver",chrome_options=chrome_options)
+    driver = webdriver.Chrome(executable_path="./chromedriver")
 
     # driver.maximize_window()
     input_array = handle_input.ret_array

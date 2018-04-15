@@ -34,6 +34,8 @@ class HandleParse():
                     min_room_type = room_type
             if(self.check_tr(tr)):
                 price = float(tr.xpath(".//td[contains(@class,'child_name')]")[0].xpath("@data-price")[0].extract())
+                if(price == 0):
+                    continue
                 if(date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')].has_key(room_type)):
                     minPrice = float(date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][room_type])
                     if(price < minPrice):
@@ -42,7 +44,10 @@ class HandleParse():
                             min_room_type = room_type
                 else:
                     date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][room_type] = price
-                    if(room_type != min_room_type and date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][min_room_type] > price):
+                    if(date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')].has_key(min_room_type)):
+                        if(room_type != min_room_type and date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][min_room_type] > price):
+                            min_room_type = room_type
+                    else:
                         min_room_type = room_type
         self.write_to_out_dic(date_roomtype_minPrice_dic,out_dic,min_room_type)
 
@@ -78,9 +83,10 @@ class HandleParse():
                     else:
                         if(price > 0):
                             date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][room_type] = price
-                            if (room_type != min_room_type and
-                                        date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][
-                                            min_room_type] > price):
+                            if(date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')].has_key(min_room_type)):
+                                if (room_type != min_room_type and date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][min_room_type] > price):
+                                    min_room_type = room_type
+                            else:
                                 min_room_type = room_type
             date = date + timedelta(1)
             num = num +1
@@ -93,7 +99,13 @@ class HandleParse():
             return False
         if(len(tr.xpath(".//td[contains(@class,'child_name')]")[0].xpath("@data-price"))==0):
             return False
+        if(len(tr.xpath(".//td[contains(@class,'child_name')]")[0].xpath("@data-hourroom")) > 0):
+            return False
         if(len(tr.xpath(".//span[contains(@class,'supplier_log')]")) > 0 ):
+            return False
+        if(len(tr.xpath(".//div[contains(@class,'btns_base22_main')]")) == 0):
+            return False
+        if(tr.xpath(".//div[contains(@class,'btns_base22_main')]")[0].root.text.replace(" ","") == "订完"):
             return False
         confirm_green_elements = tr.xpath(".//span[contains(@class,'confirm_green')]")
         if(len(confirm_green_elements) > 0):
