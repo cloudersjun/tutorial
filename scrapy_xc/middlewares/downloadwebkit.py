@@ -3,6 +3,11 @@ import logging
 import sys
 import time
 
+
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 from scrapy.http import HtmlResponse
@@ -14,7 +19,11 @@ class HandleRequest(object):
         input_item = request.meta["item_info"]
         self.dom_change(input_item["start_date"], input_item["end_date"], spider.driver)
         spider.driver.find_element_by_xpath("//a[@id='changeBtn']").click()
-        time.sleep(5)
+        time.sleep(2)
+        spider.driver.refresh()
+        spider.driver.execute_script("scroll(0,600);")
+        spider.driver.find_element_by_xpath("//a[@id='changeBtn']").click()
+        time.sleep(4)
         string = spider.driver.page_source
         # logging.info(type(string))
         string = string.decode("utf-8", "ignore").encode("utf-8", "ignore")

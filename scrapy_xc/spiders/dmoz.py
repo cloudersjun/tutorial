@@ -72,7 +72,7 @@ import scrapy_xc.middlewares.downloadwebkit
 # 通过下面的方式进行简单配置输出方式与日志级别
 logging.basicConfig(filename='logger.log', level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s : %(levelname)s : %(message)s',
-                    datefmt='%Y-m%-D% %H:%M:%S',
+                    datefmt='%Y-%m-%d %H:%M:%S',
                     filemode='w'
                     )
 
@@ -98,10 +98,11 @@ class DmozSpider(scrapy.Spider):
     # 不加载图片
     # prefs = {"profile.managed_default_content_settings.images": 2}
     # chrome_options.add_experimental_option("prefs", prefs)
-    driver = webdriver.Chrome(executable_path="./chromedriver",chrome_options=chrome_options)
+    driver = webdriver.Chrome(executable_path="./chromedriver.exe",chrome_options=chrome_options)
     # driver = webdriver.Chrome(executable_path="./chromedriver")
 
-    # driver.maximize_window()
+
+    driver.maximize_window()
     input_array = handle_input.ret_array
 
     def start_requests(self):
@@ -121,12 +122,12 @@ class DmozSpider(scrapy.Spider):
     def parse(self, response):
         input_item = response.meta["item_info"]
         # logging.debug(input_item)
-        if input_item["name"] == '上海中航虹桥机场泊悦酒店(中国国际航空公司)' \
-                or input_item["name"]=='上海新虹桥希尔顿花园酒店' \
-                or input_item['name']=='希岸酒店(上海虹桥机场国展中心店)':
-            with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
+        # if input_item["name"] == '上海中航虹桥机场泊悦酒店(中国国际航空公司)' \
+        #         or input_item["name"]=='上海新虹桥希尔顿花园酒店' \
+        #         or input_item['name']=='希岸酒店(上海虹桥机场国展中心店)':
+        with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
                       'w') as f:
-                f.write(response.body)
+            f.write(response.body)
         parse = HandleParse(response, datetime.strptime(input_item["start_date"], "%Y-%m-%d"),
                             datetime.strptime(input_item["end_date"], "%Y-%m-%d"), input_item["room_type"],
                             input_item["name"])
@@ -143,7 +144,6 @@ class DmozSpider(scrapy.Spider):
         handle_output.write()
 
 
-settings = get_project_settings()
-process = CrawlerProcess(settings)
+process = CrawlerProcess(get_project_settings())
 process.crawl(DmozSpider)
-process.start()
+process.start(stop_after_crawl=False)
