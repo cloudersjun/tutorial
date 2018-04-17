@@ -1,4 +1,9 @@
 .idea/*
 *.log
 .DS_Store
-*.pyc
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+dist
+build
