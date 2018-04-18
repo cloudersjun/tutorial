@@ -143,7 +143,6 @@ class DmozSpider(scrapy.Spider):
         handle_output.write()
 
 
-
 process = CrawlerProcess(get_project_settings())
 process.crawl(DmozSpider)
 process.start(stop_after_crawl=False)
