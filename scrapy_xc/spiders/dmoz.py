@@ -4,6 +4,9 @@ import logging
 from datetime import datetime, timedelta
 
 import sys
+from random import Random, random
+
+from scrapy_xc import settings
 from scrapy_xc.handle_input import HandleInput
 from scrapy_xc.handle_output import HandleOutput
 from scrapy_xc.handler_parse import HandleParse
@@ -68,7 +71,6 @@ import scrapy.exceptions
 import scrapy_xc.spiders
 import scrapy_xc.middlewares.downloadwebkit
 
-
 # 通过下面的方式进行简单配置输出方式与日志级别
 logging.basicConfig(filename='logger.log', level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s : %(levelname)s : %(message)s',
@@ -98,7 +100,7 @@ class DmozSpider(scrapy.Spider):
     # 不加载图片
     # prefs = {"profile.managed_default_content_settings.images": 2}
     # chrome_options.add_experimental_option("prefs", prefs)
-    driver = webdriver.Chrome(executable_path="./chromedriver.exe",chrome_options=chrome_options)
+    driver = webdriver.Chrome(executable_path="./chromedriver", chrome_options=chrome_options)
     # driver = webdriver.Chrome(executable_path="./chromedriver")
 
 
@@ -113,9 +115,6 @@ class DmozSpider(scrapy.Spider):
             if self.max_date is None or self.max_date < datetime.strptime(input_item["end_date"], "%Y-%m-%d"):
                 self.max_date = datetime.strptime(input_item["end_date"], "%Y-%m-%d")
             request = scrapy.Request(url=input_item["hotel_url"], callback=self.parse, dont_filter=True)
-            referer = str(input_item['hotel_url']).split('#')[0]
-            logging.info("referer:"+referer)
-            request.headers.appendlist('Referer',referer)
             request.meta["item_info"] = input_item
             yield request
 
@@ -126,7 +125,7 @@ class DmozSpider(scrapy.Spider):
         #         or input_item["name"]=='上海新虹桥希尔顿花园酒店' \
         #         or input_item['name']=='希岸酒店(上海虹桥机场国展中心店)':
         with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
-                      'w') as f:
+                  'w') as f:
             f.write(response.body)
         parse = HandleParse(response, datetime.strptime(input_item["start_date"], "%Y-%m-%d"),
                             datetime.strptime(input_item["end_date"], "%Y-%m-%d"), input_item["room_type"],
@@ -142,6 +141,7 @@ class DmozSpider(scrapy.Spider):
         handle_output = HandleOutput(self.file_path, self.file_name, self.file_header, out_map,
                                      self.input_array)
         handle_output.write()
+
 
 
 process = CrawlerProcess(get_project_settings())

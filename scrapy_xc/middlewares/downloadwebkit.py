@@ -2,11 +2,9 @@
 import logging
 import sys
 import time
+from random import Random, random
 
-
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from scrapy.conf import settings
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -15,15 +13,21 @@ from scrapy.http import HtmlResponse
 
 class HandleRequest(object):
     def process_request(self, request, spider):
-        spider.driver.get(request.url)
+        ua = random.choice(settings.get('USER_AGENT_LIST'))
+        if ua:
+            request.headers.setdefault('User-Agent', ua)
         input_item = request.meta["item_info"]
+        referer = str(input_item['hotel_url']).split('#')[0]
+        logging.info("referer:" + referer)
+        request.headers.setdefault('Referer', referer)
+        spider.driver.get(request.url)
         self.dom_change(input_item["start_date"], input_item["end_date"], spider.driver)
         spider.driver.find_element_by_xpath("//a[@id='changeBtn']").click()
-        time.sleep(2)
+        time.sleep(Random.randint(1, 3))
         spider.driver.refresh()
-        spider.driver.execute_script("scroll(0,600);")
+        spider.driver.execute_script("scroll(0," + Random.randint(590, 650).__str__() + ");")
         spider.driver.find_element_by_xpath("//a[@id='changeBtn']").click()
-        time.sleep(4)
+        time.sleep(Random.randint(3, 5))
         string = spider.driver.page_source
         # logging.info(type(string))
         string = string.decode("utf-8", "ignore").encode("utf-8", "ignore")
