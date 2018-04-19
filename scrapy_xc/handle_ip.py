@@ -5,10 +5,11 @@ from random import choice
 import requests
 from scrapy import Selector
 
+
 class Handle_ip:
     def __init__(self):
-        self.ip_list=[]
-        self.file_name="ip.ini"
+        self.ip_list = []
+        self.file_name = "ip.ini"
 
     def crawl_ips(self):
         """
@@ -29,16 +30,18 @@ class Handle_ip:
                 proxy_type = tr.css("td:nth-child(6)::text").extract_first()
                 if speed_str:
                     speed = float(speed_str.split("秒")[0])
-                    if speed>3 or proxy_type!="HTTP":
+                    if speed > 3 or proxy_type != "HTTP":
                         continue
                 ip_list.append((ip, port, proxy_type, speed))
             with open(self.file_name, 'w') as f:
                 for ip_info in ip_list:
-                    f.writelines(str(list(ip_info))+"\n")
+                    f.writelines(str(list(ip_info)) + "\n")
                 f.close()
+
     def load_ip(self):
         with open(self.file_name, "r") as f:
             self.ip_list = f.readlines()
         f.close()
+
     def random_ip(self):
-        return tuple(choice(self.ip_list).replace("\n",""))
+        return tuple(choice(self.ip_list).replace("\n", ""))
