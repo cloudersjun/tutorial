@@ -5,6 +5,8 @@ import time
 from random import choice
 import random
 
+from scrapy_xc.handle_ip import Handle_ip
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 from scrapy.http import HtmlResponse
@@ -56,6 +58,8 @@ class HandleRequest(object):
         if ua:
             request.headers.setdefault('User-Agent', ua)
         input_item = request.meta["item_info"]
+        ip=input_item["ip"]
+        request.meta["proxy"] = "http://" + ip[0]+ip[1]
         referer = str(input_item['hotel_url']).split('#')[0]
         logging.info("referer:" + referer)
         request.headers.setdefault('Referer', referer)

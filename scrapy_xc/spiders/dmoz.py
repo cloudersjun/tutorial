@@ -8,6 +8,7 @@ from random import Random, random
 
 from scrapy_xc import settings
 from scrapy_xc.handle_input import HandleInput
+from scrapy_xc.handle_ip import Handle_ip
 from scrapy_xc.handle_output import HandleOutput
 from scrapy_xc.handler_parse import HandleParse
 
@@ -88,6 +89,11 @@ class DmozSpider(scrapy.Spider):
     logging.info('start init....')
     file_name = "result.xlsx"
     handle_input = HandleInput()
+    handle_ip = Handle_ip()
+    # 爬取ip到文件
+    handle_ip.crawl_ips()
+    # 将ip加载到内存
+    handle_ip.load_ip()
     # {"name":，"room_type":,"price_dic":{"date":,"price":}]}
     global out_map
     out_map = {}
@@ -100,7 +106,7 @@ class DmozSpider(scrapy.Spider):
     # 不加载图片
     # prefs = {"profile.managed_default_content_settings.images": 2}
     # chrome_options.add_experimental_option("prefs", prefs)
-    driver = webdriver.Chrome(executable_path="./chromedriver", chrome_options=chrome_options)
+    driver = webdriver.Chrome(executable_path="./chromedriver.exe", chrome_options=chrome_options)
     # driver = webdriver.Chrome(executable_path="./chromedriver")
 
 
@@ -115,6 +121,7 @@ class DmozSpider(scrapy.Spider):
             if self.max_date is None or self.max_date < datetime.strptime(input_item["end_date"], "%Y-%m-%d"):
                 self.max_date = datetime.strptime(input_item["end_date"], "%Y-%m-%d")
             request = scrapy.Request(url=input_item["hotel_url"], callback=self.parse, dont_filter=True)
+            input_item["ip"]=self.handle_ip.random_ip()
             request.meta["item_info"] = input_item
             yield request
 
