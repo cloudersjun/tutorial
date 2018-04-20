@@ -30,12 +30,12 @@ class Handle_ip:
                 proxy_type = tr.css("td:nth-child(6)::text").extract_first()
                 if speed_str:
                     speed = float(speed_str.split("秒")[0])
-                    if speed > 3 or proxy_type != "HTTP":
+                    if speed > 3:
                         continue
                 ip_list.append((ip, port, proxy_type, speed))
             with open(self.file_name, 'w') as f:
                 for ip_info in ip_list:
-                    f.writelines(str(list(ip_info)) + "\n")
+                    f.writelines(str(ip_info[2]).lower()+"://"+str(ip_info[0])+":"+str(ip_info[1]) + "\n")
                 f.close()
 
     def load_ip(self):
@@ -44,4 +44,4 @@ class Handle_ip:
         f.close()
 
     def random_ip(self):
-        return tuple(choice(self.ip_list).replace("\n", ""))
+        return choice(self.ip_list).replace("\n", "")
