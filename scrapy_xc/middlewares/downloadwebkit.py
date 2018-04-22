@@ -3,6 +3,7 @@ import logging
 import random
 import sys
 import time
+import datetime
 from random import choice
 
 reload(sys)
@@ -64,10 +65,12 @@ class HandleRequest(object):
         spider.driver.get(request.url)
         time.sleep(random.randint(1, 3))
         spider.driver.execute_script("scroll(0," + random.randint(590, 650).__str__() + ");")
-        self.dom_change(input_item["start_date"], input_item["end_date"], spider.driver)
-        spider.driver.find_element_by_xpath("//a[@id='changeBtn']").click()
-        time.sleep(random.randint(1, 3))
-        # spider.driver.find_element_by_xpath("//a[@id='changeBtn']").click()
+        nowday = str(datetime.date.today())
+        tomorrow = str(datetime.date.today() + datetime.timedelta(days=1))
+        if(nowday != input_item["start_date"] or tomorrow != input_item["end_date"]):
+            self.dom_change(input_item["start_date"], input_item["end_date"], spider.driver)
+            spider.driver.find_element_by_xpath("//a[@id='changeBtn']").click()
+            time.sleep(random.randint(3, 5))
         time.sleep(random.randint(3, 5))
         string = spider.driver.page_source
         string = string.decode("utf-8", "ignore").encode("utf-8", "ignore")
@@ -82,9 +85,12 @@ class HandleRequest(object):
 
     def dom_change(self, start_date, end_date, driver):
         logging.debug(u"操作dom.....")
+        time.sleep(random.randint(1, 3))
         start_dom = driver.find_element_by_xpath("//input[@id='cc_txtCheckIn']")
         start_dom.clear()
         start_dom.send_keys(start_date)
+        time.sleep(random.randint(1, 3))
         end_dom = driver.find_element_by_xpath("//input[@id='cc_txtCheckOut']")
         end_dom.clear()
         end_dom.send_keys(end_date)
+        time.sleep(random.randint(3, 5))
