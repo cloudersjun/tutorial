@@ -53,18 +53,20 @@ def random_ua():
 
 class HandleRequest(object):
     def process_request(self, request, spider):
-        ua = random_ua()
-        if ua:
-            request.headers.setdefault('User-Agent', ua)
+        # ua = random_ua()
+        # if ua:
+        #     request.headers.setdefault('User-Agent', ua)
         # request.headers.setdefault('User-Agent', "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36")
-        input_item = request.meta["item_info"]
-        request.meta["proxy"] = input_item["proxy"]
-        referer = str(input_item['hotel_url']).split('#')[0]
-        logging.info("referer:" + referer)
-        request.headers.setdefault('Referer', referer)
+        input_item = spider.meta_info
+        # request.meta["proxy"] = input_item["proxy"]
+        # referer = str(input_item['hotel_url']).split('#')[0]
+        # logging.info("referer:" + referer)
+        # request.headers.setdefault('Referer', referer)
+        spider.driver.get("http://www.baidu.com")
+        time.sleep(3)
         spider.driver.get(request.url)
         time.sleep(random.randint(1, 3))
-        spider.driver.execute_script("scroll(0," + random.randint(590, 650).__str__() + ");")
+        # spider.driver.execute_script("scroll(0," + random.randint(590, 650).__str__() + ");")
         nowday = str(datetime.date.today())
         tomorrow = str(datetime.date.today() + datetime.timedelta(days=1))
         if(nowday != input_item["start_date"] or tomorrow != input_item["end_date"]):

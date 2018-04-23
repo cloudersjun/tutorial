@@ -44,7 +44,6 @@ DEFAULT_REQUEST_HEADERS = {
     'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7,zh-TW;q=0.6'
 }
 
-IPPOOL=[]
 
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html

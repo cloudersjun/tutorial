@@ -101,15 +101,17 @@ class DmozSpider(scrapy.Spider):
     max_date = None
     min_date = None
     logging.info("init browser....")
-    chrome_options = Options()
+    # chrome_options = Options()
     # chrome_options.set_headless(True)
     # 不加载图片
     # prefs = {"profile.managed_default_content_settings.images": 2}
     # chrome_options.add_experimental_option("prefs", prefs)
-    driver = webdriver.Chrome(executable_path="./chromedriver", chrome_options=chrome_options)
+    driver = webdriver.Chrome(executable_path="./chromedriver")
     # driver = webdriver.Chrome(executable_path="./chromedriver")
-    driver.maximize_window()
+    # driver.maximize_window()
+    driver.fullscreen_window()
     input_array = handle_input.ret_array
+    meta_info = {}
 
     def start_requests(self):
         logging.info(u"爬取输入数组:" + json.dumps(self.input_array, ensure_ascii=False, encoding="gb2312"))
@@ -120,11 +122,11 @@ class DmozSpider(scrapy.Spider):
                 self.max_date = datetime.strptime(input_item["end_date"], "%Y-%m-%d")
             request = scrapy.Request(url=input_item["hotel_url"], callback=self.parse, dont_filter=True)
             input_item["proxy"] = self.handle_ip.random_ip()
-            request.meta["item_info"] = input_item
+            self.meta_info = input_item
             yield request
 
     def parse(self, response):
-        input_item = response.meta["item_info"]
+        input_item = self.meta_info
         # logging.debug(input_item)
         # if input_item["name"] == '上海中航虹桥机场泊悦酒店(中国国际航空公司)' \
         #         or input_item["name"]=='上海新虹桥希尔顿花园酒店' \
