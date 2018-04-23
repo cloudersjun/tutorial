@@ -108,6 +108,7 @@ class DmozSpider(scrapy.Spider):
     # 禁用cookie
     prefs = { "profile.default_content_settings.cookies": 2}
     chrome_options.add_experimental_option("prefs", prefs)
+    chrome_options.add_argument("--disable-local-storage")
     driver = webdriver.Chrome(executable_path="./chromedriver", chrome_options=chrome_options)
     # driver = webdriver.Chrome(executable_path="./chromedriver")
     # driver.maximize_window()
