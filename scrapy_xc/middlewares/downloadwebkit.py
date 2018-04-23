@@ -66,7 +66,7 @@ class HandleRequest(object):
         time.sleep(3)
         spider.driver.get(request.url)
         time.sleep(random.randint(1, 3))
-        # spider.driver.execute_script("scroll(0," + random.randint(590, 650).__str__() + ");")
+        spider.driver.execute_script("scroll(0," + random.randint(580, 630).__str__() + ");")
         nowday = str(datetime.date.today())
         tomorrow = str(datetime.date.today() + datetime.timedelta(days=1))
         if(nowday != input_item["start_date"] or tomorrow != input_item["end_date"]):

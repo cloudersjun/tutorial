@@ -101,12 +101,14 @@ class DmozSpider(scrapy.Spider):
     max_date = None
     min_date = None
     logging.info("init browser....")
-    # chrome_options = Options()
+    chrome_options = Options()
     # chrome_options.set_headless(True)
     # 不加载图片
-    # prefs = {"profile.managed_default_content_settings.images": 2}
-    # chrome_options.add_experimental_option("prefs", prefs)
-    driver = webdriver.Chrome(executable_path="./chromedriver")
+    # prefs = {"profile.managed_default_content_settings.images": 2, "profile.default_content_settings.cookies": 2}
+    # 禁用cookie
+    prefs = { "profile.default_content_settings.cookies": 2}
+    chrome_options.add_experimental_option("prefs", prefs)
+    driver = webdriver.Chrome(executable_path="./chromedriver", chrome_options=chrome_options)
     # driver = webdriver.Chrome(executable_path="./chromedriver")
     # driver.maximize_window()
     driver.fullscreen_window()
