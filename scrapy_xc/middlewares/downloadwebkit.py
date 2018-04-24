@@ -57,7 +57,7 @@ class HandleRequest(object):
         # if ua:
         #     request.headers.setdefault('User-Agent', ua)
         # request.headers.setdefault('User-Agent', "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36")
-        input_item = spider.meta_info
+        input_item = request.meta["item_info"]
         # request.meta["proxy"] = input_item["proxy"]
         # referer = str(input_item['hotel_url']).split('#')[0]
         # logging.info("referer:" + referer)

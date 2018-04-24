@@ -109,7 +109,7 @@ class DmozSpider(scrapy.Spider):
     prefs = { "profile.default_content_settings.cookies": 2}
     chrome_options.add_experimental_option("prefs", prefs)
     chrome_options.add_argument("--disable-local-storage")
-    driver = webdriver.Chrome(executable_path="./chromedriver.exe", chrome_options=chrome_options)
+    driver = webdriver.Chrome(executable_path="./chromedriver", chrome_options=chrome_options)
     # driver = webdriver.Chrome(executable_path="./chromedriver")
     driver.maximize_window()
     # driver.fullscreen_window()
@@ -125,11 +125,11 @@ class DmozSpider(scrapy.Spider):
                 self.max_date = datetime.strptime(input_item["end_date"], "%Y-%m-%d")
             request = scrapy.Request(url=input_item["hotel_url"], callback=self.parse, dont_filter=True)
             # input_item["proxy"] = self.handle_ip.random_ip()
-            self.meta_info = input_item
+            request.meta["item_info"] = input_item
             yield request
 
     def parse(self, response):
-        input_item = self.meta_info
+        input_item = response.meta["item_info"]
         # logging.debug(input_item)
         # if input_item["name"] == '上海中航虹桥机场泊悦酒店(中国国际航空公司)' \
         #         or input_item["name"]=='上海新虹桥希尔顿花园酒店' \
