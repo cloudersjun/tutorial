@@ -93,7 +93,7 @@ class DmozSpider(scrapy.Spider):
     # 爬取ip到文件
     # handle_ip.crawl_ips()
     # 将ip加载到内存
-    handle_ip.load_ip()
+    # handle_ip.load_ip()
     # {"name":，"room_type":,"price_dic":{"date":,"price":}]}
     global out_map
     out_map = {}
@@ -109,10 +109,10 @@ class DmozSpider(scrapy.Spider):
     prefs = { "profile.default_content_settings.cookies": 2}
     chrome_options.add_experimental_option("prefs", prefs)
     chrome_options.add_argument("--disable-local-storage")
-    driver = webdriver.Chrome(executable_path="./chromedriver", chrome_options=chrome_options)
+    driver = webdriver.Chrome(executable_path="./chromedriver.exe", chrome_options=chrome_options)
     # driver = webdriver.Chrome(executable_path="./chromedriver")
-    # driver.maximize_window()
-    driver.fullscreen_window()
+    driver.maximize_window()
+    # driver.fullscreen_window()
     input_array = handle_input.ret_array
     meta_info = {}
 
@@ -124,7 +124,7 @@ class DmozSpider(scrapy.Spider):
             if self.max_date is None or self.max_date < datetime.strptime(input_item["end_date"], "%Y-%m-%d"):
                 self.max_date = datetime.strptime(input_item["end_date"], "%Y-%m-%d")
             request = scrapy.Request(url=input_item["hotel_url"], callback=self.parse, dont_filter=True)
-            input_item["proxy"] = self.handle_ip.random_ip()
+            # input_item["proxy"] = self.handle_ip.random_ip()
             self.meta_info = input_item
             yield request
 
@@ -143,6 +143,8 @@ class DmozSpider(scrapy.Spider):
         parse.parse(out_map)
 
     def close(self, reason):
+        logging.info(u"close brower")
+        self.driver.close()
         temp_date = self.min_date
         while temp_date < self.max_date:
             self.file_header.append(temp_date.strftime("%Y-%m-%d"))
@@ -155,4 +157,4 @@ class DmozSpider(scrapy.Spider):
 
 process = CrawlerProcess(get_project_settings())
 process.crawl(DmozSpider)
-process.start(stop_after_crawl=False)
+process.start(stop_after_crawl=True)

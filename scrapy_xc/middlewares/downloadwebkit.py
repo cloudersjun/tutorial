@@ -63,17 +63,17 @@ class HandleRequest(object):
         # logging.info("referer:" + referer)
         # request.headers.setdefault('Referer', referer)
         spider.driver.get("http://www.baidu.com")
-        time.sleep(3)
+        time.sleep(2)
         spider.driver.get(request.url)
         time.sleep(random.randint(1, 3))
-        spider.driver.execute_script("scroll(0," + random.randint(580, 630).__str__() + ");")
+        spider.driver.execute_script("scroll(0," + random.randint(580, 600).__str__() + ");")
         nowday = str(datetime.date.today())
         tomorrow = str(datetime.date.today() + datetime.timedelta(days=1))
         if(nowday != input_item["start_date"] or tomorrow != input_item["end_date"]):
             self.dom_change(input_item["start_date"], input_item["end_date"], spider.driver)
             spider.driver.find_element_by_xpath("//a[@id='changeBtn']").click()
             time.sleep(random.randint(3, 5))
-        time.sleep(random.randint(3, 5))
+        time.sleep(2)
         string = spider.driver.page_source
         string = string.decode("utf-8", "ignore").encode("utf-8", "ignore")
         rendered_body = string
@@ -95,4 +95,4 @@ class HandleRequest(object):
         end_dom = driver.find_element_by_xpath("//input[@id='cc_txtCheckOut']")
         end_dom.clear()
         end_dom.send_keys(end_date)
-        time.sleep(random.randint(3, 5))
+        time.sleep(random.randint(1, 3))

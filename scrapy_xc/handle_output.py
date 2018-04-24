@@ -34,14 +34,15 @@ class HandleOutput:
         already_set = set()
         for room_input_info in self.input_array:
             room_name = room_input_info['name']
-            sheet.write(row, 0, room_name)
-            sheet.write(row, 1, room_input_info["room_type"])
             if already_set.__contains__(room_name):
                 continue
             else:
+                sheet.write(row, 0, room_name)
+                sheet.write(row, 1, room_input_info["room_type"])
                 price_info_map = self.result_map.get(room_name)
                 if price_info_map is None:
-                    continue
+                    for i in xrange(2, len(self.header)):
+                        sheet.write(row, i, 2500, red_format)
                 else:
                     for i in xrange(2, len(self.header)):
                         price_date = self.header[i]
