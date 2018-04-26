@@ -89,7 +89,7 @@ class DmozSpider(scrapy.Spider):
     logging.info('start init....')
     file_name = "result.xlsx"
     handle_input = HandleInput()
-    handle_ip = Handle_ip()
+    # handle_ip = Handle_ip()
     # 爬取ip到文件
     # handle_ip.crawl_ips()
     # 将ip加载到内存
@@ -109,7 +109,7 @@ class DmozSpider(scrapy.Spider):
     prefs = { "profile.default_content_settings.cookies": 2}
     chrome_options.add_experimental_option("prefs", prefs)
     chrome_options.add_argument("--disable-local-storage")
-    driver = webdriver.Chrome(executable_path="./chromedriver", chrome_options=chrome_options)
+    driver = webdriver.Chrome(executable_path="./chromedriver.exe", chrome_options=chrome_options)
     # driver = webdriver.Chrome(executable_path="./chromedriver")
     driver.maximize_window()
     # driver.fullscreen_window()
@@ -134,9 +134,9 @@ class DmozSpider(scrapy.Spider):
         # if input_item["name"] == '上海中航虹桥机场泊悦酒店(中国国际航空公司)' \
         #         or input_item["name"]=='上海新虹桥希尔顿花园酒店' \
         #         or input_item['name']=='希岸酒店(上海虹桥机场国展中心店)':
-        with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
-                  'w') as f:
-            f.write(response.body)
+        # with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
+        #           'w') as f:
+        #     f.write(response.body)
         parse = HandleParse(response, datetime.strptime(input_item["start_date"], "%Y-%m-%d"),
                             datetime.strptime(input_item["end_date"], "%Y-%m-%d"), input_item["room_type"],
                             input_item["name"])
