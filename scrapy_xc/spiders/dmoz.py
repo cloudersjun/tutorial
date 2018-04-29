@@ -107,11 +107,16 @@ class DmozSpider(scrapy.Spider):
     # prefs = {"profile.managed_default_content_settings.images": 2, "profile.default_content_settings.cookies": 2}
     # 禁用cookie
     prefs = { "profile.default_content_settings.cookies": 2}
-    chrome_options.add_experimental_option("prefs", prefs)
-    chrome_options.add_argument("--disable-local-storage")
+    # chrome_options.add_experimental_option("prefs", prefs)
+    # chrome_options.add_argument("--user-data-dir=C:/Users/Administrator/AppData/Local/Google/Chrome/User Data");
+    # chrome_ochrome_optionsptions.add_argument("--disable-local-storage")
+    # chrome_options.add_argument("start-maximized")
+    # chrome_options.add_argument("disable-infobars")
+    # chrome_options.add_argument("--disable-extensions")
+    # chrome_options.add_argument('--headless')
     driver = webdriver.Chrome(executable_path="./chromedriver.exe", chrome_options=chrome_options)
-    # driver = webdriver.Chrome(executable_path="./chromedriver")
-    driver.maximize_window()
+    # driver = webdriver.Chrome(executable_path="./chromedriver.exe")
+    # driver.maximize_window()
     # driver.fullscreen_window()
     input_array = handle_input.ret_array
     meta_info = {}
