@@ -1,9 +1,9 @@
 # coding=utf-8
+import datetime
 import logging
 import random
 import sys
 import time
-import datetime
 from random import choice
 
 reload(sys)
@@ -63,13 +63,17 @@ class HandleRequest(object):
         # logging.info("referer:" + referer)
         # request.headers.setdefault('Referer', referer)
         spider.driver.get("http://www.baidu.com")
+        # spider.driver.navigate().to("http://www.baidu.com")
         time.sleep(2)
+        # spider.driver.delete_all_cookies()
         spider.driver.get(request.url)
+        # spider.driver.navigate().to(request.url)
         time.sleep(random.randint(1, 3))
         spider.driver.execute_script("scroll(0," + random.randint(580, 600).__str__() + ");")
-        nowday = str(datetime.date.today())
+        now_day = str(datetime.date.today())
         tomorrow = str(datetime.date.today() + datetime.timedelta(days=1))
-        if(nowday != input_item["start_date"] or tomorrow != input_item["end_date"]):
+        # spider.driver.delete_all_cookies()
+        if now_day != input_item["start_date"] or tomorrow != input_item["end_date"]:
             self.dom_change(input_item["start_date"], input_item["end_date"], spider.driver)
             spider.driver.find_element_by_xpath("//a[@id='changeBtn']").click()
             time.sleep(random.randint(3, 5))
