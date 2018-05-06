@@ -108,7 +108,6 @@ class DmozSpider(scrapy.Spider):
     # chrome_options.add_argument("--use-new-accept-language-header")
     # chrome_options.add_argument("--disable-session-storage")、
     chrome_options.add_argument("--start-maximized")
-    desired_capabilities = chrome_options.to_capabilities()
     # chrome_options.add_argument("--incognito")
     # chrome_options.add_argument("--disable-java")
     # chrome_options.add_argument("disable-infobars")
