@@ -51,6 +51,28 @@ def random_ua():
     return choice(l)
 
 
+def click(driver):
+    driver.find_element_by_xpath("//a[@id='changeBtn']").click()
+    # script = "var a =window['document']['$cdc_asdjflasutopfhvcZLmcfl_'];window['document']['$cdc_asdjflasutopfhvcZLmcfl_']=null;" \
+    #          "var now = new Date();var exitTime = now.getTime() + 11*1000; " \
+    #          "while (true) { now = new Date(); if (now.getTime() > exitTime){ window['document'][" \
+    #          "'$cdc_asdjflasutopfhvcZLmcfl_']=a;break}}; "
+    # logging.info(script)
+    # driver.execute_script(script)
+    # driver.execute_script("window['document']['$cdc_asdjflas' + 'utopfhvcZLmcfl_']=null")
+    # driver.execute_script("alert(a)")
+
+
+def dom_change(start_date, end_date, driver):
+    logging.debug(u"操作dom.....")
+    start_dom = driver.find_element_by_xpath("//input[@id='cc_txtCheckIn']")
+    start_dom.clear()
+    start_dom.send_keys(start_date)
+    end_dom = driver.find_element_by_xpath("//input[@id='cc_txtCheckOut']")
+    end_dom.clear()
+    end_dom.send_keys(end_date)
+
+
 class HandleRequest(object):
     def process_request(self, request, spider):
         # ua = random_ua()
@@ -62,22 +84,15 @@ class HandleRequest(object):
         # referer = str(input_item['hotel_url']).split('#')[0]
         # logging.info("referer:" + referer)
         # request.headers.setdefault('Referer', referer)
-        spider.driver.get("http://www.baidu.com")
-        # spider.driver.navigate().to("http://www.baidu.com")
-        time.sleep(2)
-        # spider.driver.delete_all_cookies()
         spider.driver.get(request.url)
-        # spider.driver.navigate().to(request.url)
-        time.sleep(random.randint(1, 3))
         spider.driver.execute_script("scroll(0," + random.randint(580, 600).__str__() + ");")
         now_day = str(datetime.date.today())
         tomorrow = str(datetime.date.today() + datetime.timedelta(days=1))
         # spider.driver.delete_all_cookies()
         if now_day != input_item["start_date"] or tomorrow != input_item["end_date"]:
-            self.dom_change(input_item["start_date"], input_item["end_date"], spider.driver)
-            spider.driver.find_element_by_xpath("//a[@id='changeBtn']").click()
-            time.sleep(random.randint(3, 5))
-        time.sleep(2)
+            dom_change(input_item["start_date"], input_item["end_date"], spider.driver)
+            click(spider.driver)
+        time.sleep(random.randint(3,5))
         string = spider.driver.page_source
         string = string.decode("utf-8", "ignore").encode("utf-8", "ignore")
         rendered_body = string
@@ -88,15 +103,3 @@ class HandleRequest(object):
         # logging.debug("提取到酒店房间数组：{}"+str(div_dom))
         return HtmlResponse(request.url, body=str(div_dom[0]).decode("utf-8", "ignore").encode("utf-8", "ignore"),
                             encoding='utf-8')
-
-    def dom_change(self, start_date, end_date, driver):
-        logging.debug(u"操作dom.....")
-        time.sleep(random.randint(1, 3))
-        start_dom = driver.find_element_by_xpath("//input[@id='cc_txtCheckIn']")
-        start_dom.clear()
-        start_dom.send_keys(start_date)
-        time.sleep(random.randint(1, 3))
-        end_dom = driver.find_element_by_xpath("//input[@id='cc_txtCheckOut']")
-        end_dom.clear()
-        end_dom.send_keys(end_date)
-        time.sleep(random.randint(1, 3))

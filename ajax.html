@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript">
+        ;!
+            function () {
+                var map = function (arr, f) {
+                    if (Array.prototype.map) {
+                        return Array.prototype.map.call(arr, f);
+                    }
+                    var result = [];
+                    for (var i = 0; i < arr.length; i++) {
+                        result.push(f(arr[i]));
+                    }
+                    return result;
+                };
+                var natsr = function (r, n) {
+                    for (var t = [32, 43, 45, 45, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57], o = r.split(n.charAt(0)), p = [], u = function (r) {
+                            var o = map(r.split(""),
+                                function (r, o) {
+                                    return String.fromCharCode(t[n.indexOf(r)])
+                                }).join("");
+                            return +o
+                        },
+                             e = function (r) {
+                                 var n = p.pop(),
+                                     t = p.pop();
+                                 r === i ? p.push(t + n) : p.push(t - n)
+                             },
+                             i = n.charAt(1), a = n.charAt(2), f = 0; f < o.length; f++) if ("" !== o[f]) if (o[f] == i || o[f] == a) {
+                        var h = o[f];
+                        e(h)
+                    } else {
+                        var c = u(o[f], n);
+                        p.push(+c)
+                    }
+                    return p.pop()
+                };
+                ;
+                var i = 0;
+                var uhh = function (var1, var2) {
+                    if (typeof var1.map === 'function') {
+                        return var1.map(var2);
+                    }
+                    var ret_array = [],
+                        temp = 0;
+                    for (i = 0, len1 = var1.length; i < len1; i++) {
+                        ret_array[temp++] = var2(var1[i], i, var1);
+                    }
+                    return ret_array;
+                };
+                var script_check = !!window.Script;
+                var result = [29, 676, 1829, 5201, 5176, 2801, 2741, 2693, 2656, 2674, 2515, 3001, 2616, 5258, 5228, 2590, 2579, 2729, 5325, 2582, 2391, 2715, 5146, 2575, 3004, 2829, 5318, 5236, 5212, 2725, 5228, 5302, 2881, 5216, 2585, 5114, 2721, 2714, 2823, 2992, 2855, 5257, 2995, 2748, 2631, 2512, 5219, 5338, 5284, 2627, 2769, 2527, 2858, 5254, 5379, 2780, 2400, 2581, 3017, 5273, 5255, 5210, 2602, 2625, 5248, 2392, 2644];
+                var dqoew = [natsr("gBbtbqbLbtbHbHbqLbtbHbqtbobHbqbqb/BbgbqbUbPbqbqbObtbqbLBbgbqbqbqbHbqGbtbqbtbBbHbHbqObGbHbObLbqbHbqb//bUbqbUbPbqbqbGbPbqbLBbgbqbHbHbHbqbLbPbHbGbLbqbqbqLbLbHbobBbHbHbHbtb/bHbPb/bHbHbqLLbgbHbLgbUbqbHbqbHbobGbqbqPbPbHbHbqPbobHbPbBbqbHbHbObobqbGbtbHbqbLLbPbqbqobobHbHbHbqbqbq", "bHqyBL/GtPoOgUQeuN7E6w1CvFK42pMr+Rhl*Z-kD80AYWJIfTcX5xmn39SjzsadiV"), natsr("AMJfJIJqJqJCJCJ2JWJCJM2JmJIJIJIJnnJWJIJMJMJIJIJM-JWJIJ2JnJIJCJIJCJMJAJIJIWJ2JCJCJn2JfJIJ9JqJCJIJCJM-JfJIJMAJfJIJIJqJAJCJmJ2JIJIJCJIJIJ-JfJIJIMJnJCJCJnJWJCJWJMJCJIJCJMJnJIJMMJ2JIJCJWJnJIJImJfJCJCJCJCJ9J-JIJIfJfJCJIJIqJAJCJAJ-JCJCJIJIMqJfJCJnJnJIJCJ-JmJCJInJnJCJIJCJIJCJC", "JCI1-MnAq9W2mfvSKu7XikQtxjNo4ParYRE*TzUyF+3LOwg5/H0be8Dh6VdspBlcGZ"), natsr("7n9n9I9b-9m9G9G9b79b9G9Gb9V9I9G9I9-9/9I9-9b9G9I9b7979I9b-9m9G9G9G9G9b9/9I9b9V9I9G9G79V9I9V9V9G9I9I9GbD949I9bD909G9I9/949G9Gb9-9I9I9I9I9I9n9V9I9G79D9I9G979n9G94979I9I9G9nV9D9G9bD9m9G9G9G/9n9I9m9-9G9I9I9I909n9G9D9D9G9I9/979G9b7909G9I9I9GV949G949D9I9I979m9I9b7909G9G9I9G9G9I", "9IGo4bn7/V-Dm0Mp2iFtZdwKYrWOyTeUJ8hl+c61RXgaq3fALjszS5NQEvxu*BCkHP"),];
+                var init_result = [function (input) {
+                    var zero = 0;
+                    var length = input.length;
+                    var result = [];
+                    var push = Array.prototype.push;
+                    for (var index = zero; index < length; index++) {
+                        push.apply(result, [Math.floor(input[index] / ( +eval('6')))]);
+                    }
+                    return result;
+                },
+                    function (input) {
+                        var zero = 0;
+                        var length = input.length;
+                        var result = [];
+                        var push = Array.prototype.push;
+                        for (var index = zero; index < length; index++) {
+                            push.apply(result, [Math.floor(input[index] / ( +eval('9')))]);
+                        }
+                        return result;
+                    },
+                    function (input) {
+                        var decode = function (x) {
+                            var one = +!
+                                function () {
+                                }();
+                            var two = (function (a, b) {
+                            }).length;
+                            var $three = (function () {
+                                return arguments.length;
+                            })(x, x, x);
+                            var oddDecode = function (x) {
+                                var up = x + (1 << $three);
+                                up *= 10;
+                                var down = 5 * two;
+                                var result = up / down;
+                                result -= two * $three;
+                                return result;
+                            };
+                            var evenDecode = function (x) {
+                                var left = x + two;
+                                left *= $three;
+                                left /= ((one << one) + one);
+                                left += two;
+                                return left;
+                            };
+                            return (Math.abs(x % 2) == 1) ? oddDecode(x) : evenDecode(x);
+                        };
+                        var output = [];
+                        for (var i = 0,
+                                 l = input.length; i < l; i++) {
+                            output[i] = decode(input[i]);
+                        }
+                        return output;
+                    }];
+                var jdeyi = (function (var1, var2) {
+                    var ret = {};
+                    for (var i = 0; i < var1.length; i++) {
+                        ret[var1[i]] = (var2[i]);
+                    }
+                    return ret;
+                })(dqoew, init_result);
+                i = 0;
+                var ycteee = [36, 99, 100, 99, 95, 97, 115, 100, 106, 102, 108, 97, 115, 117, 116, 111, 112, 102, 104, 118, 99, 90, 76, 109, 99, 102, 108, 95];
+                (function () {
+                    while (i < 3) {
+                        var temp = jdeyi[result[0]];
+                        result = result.slice(1);
+                        result = temp(result);
+                        result.push(result.pop() + script_check);
+                        if (true) {
+                            (function () {
+                                var decode_uri = decodeURIComponent;
+                                var decode_ret = decode_uri(window.location.href).toLowerCase().indexOf(decode_uri("/hotel/396401.html").toLowerCase());
+                                if (decode_ret == -1) {
+                                    result.pop();
+                                    return;
+                                }
+                                var resultLength = result.length;
+                                var length = decode_uri("/hotel/396401.html").length;
+                                for (var i = 0; i < length; i++) {
+                                    if (i >= resultLength) {
+                                        continue;
+                                    }
+                                    result[i] += (decode_uri(window.location.href).toLowerCase().charCodeAt(decode_ret + i) - decode_uri("/hotel/396401.html").toLowerCase().charCodeAt(i));
+                                }
+                            })();
+                        }
+                        i++;
+                    }
+                    ;
+                })();
+                try {
+                    var lleez = !!document[uhh(ycteee,
+                        function (var1) {
+                            return String.fromCharCode(var1);
+                        }).join('')];
+                    (lleez) || (function () {
+                        result[0] = [97, 98, 99][Math.floor(Math.random() * 3)];
+                    });
+                } catch (err) {
+                }
+                try {
+                    new Image();
+                } catch (err) {
+                    var temp = result.pop();
+                    temp += 1;
+                    result.push(temp);
+                }
+                ;
+                result[3] += ( +/^https?:\/\/.*?\.meituan.com\//.test(document.referrer));
+                var no_use = function () {
+                    var array_1 = [].slice.apply(arguments);
+                    var win_f = (function () {
+                        return this || window
+                    })();
+                    var temp;
+                    while (temp = array_1.shift()) {
+                        win_f = win_f[temp];
+                        if (!win_f) {
+                            return;
+                        }
+                    }
+                    return win_f;
+                };
+                ;
+                var win_f = (function () {
+                    return this || window;
+                })();
+                var require_str = 'require';
+                var length_str = 'length';
+                win_f && win_f[require_str] && win_f[require_str][length_str] === 1 && (result = [32769, 26495, 32473, 23567, 19977, 20080, 20102, 21253, 65292, 32, 21364, 27809, 26377, 32473, 20320, 38065, 20080, 25151]);
+                /*[32769,26495,19968,23450,20250,21644,20320,35828,25105,20204,36824,22312,20111,25439,23545,19981,23545]*/
+                /*[35828,31561,25105,20204,36798,25104,20102,120,120,30446,26631,65292,32,35753,20320,20204,37117,21464,22303,35946]*/
+                /*[20320,30456,20449,20102,23545,21527]*/
+                /*[21621,21621,21621,21621]*/
+                /*[24180,36731,30495,22909]*/
+                /*[39575]*/
+                /*[26681,25454,25289,21246,26597,35810,65292,32,27604,36739,19981,38169,30340,29228,34411,24037,31243,24072,36215,34218,26159,49,48,107,65292,32,30446,21069,24212,23626,29983,36215,34218,26159,49,51,107,21734]*/
+                try {
+                    result = uhh(result, function (var1) {
+                        return String.fromCharCode(var1);
+                    }).join('');
+                } catch (err) {
+                }
+                console.log(new Function('return "' + result + '";'));
+            }();
+
+
+    </script>
+</head>
+<body>
+<h1> jQuery ajax() demo
+</h1>
+<input type="button" id="ajaxBtn" value="Send Ajax request"/>
+<p>
+</p>
+</body>
+</html>

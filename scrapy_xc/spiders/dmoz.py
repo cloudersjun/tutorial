@@ -98,16 +98,20 @@ class DmozSpider(scrapy.Spider):
     chrome_options = Options()
     # chrome_options.set_headless(True)
     # 不加载图片
-    prefs = {"profile.managed_default_content_settings.images": 2, "profile.managed_default_content_settings.cookies": 2}
+    # prefs = {"profile.managed_default_content_settings.images": 2,
+    #          "profile.managed_default_content_settings.cookies": 2}
+    prefs = {"profile.managed_default_content_settings.cookies": 2}
     # 禁用cookie
     # prefs = {"profile.default_content_settings.cookies": 2, "profile.use-new-accept-language-header": 2}
     chrome_options.add_experimental_option("prefs", prefs)
-    chrome_options.add_argument("Accept-Language= en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7,zh-TW;q=0.6")
-    chrome_options.add_argument("-use-new-accept-language-header")
+    chrome_options.add_argument("lang=zh-CN;en-Us;en;zh;zh-TW")
+    # chrome_options.add_argument("-use-new-accept-language-header")
+
     # chrome_options.add_argument("--disable-local-storage")
     # chrome_options.add_argument("--use-new-accept-language-header")
     # chrome_options.add_argument("--disable-session-storage")、
     chrome_options.add_argument("--start-maximized")
+    chrome_options.add_argument('disable-infobars')
     # chrome_options.add_argument("--incognito")
     # chrome_options.add_argument("--disable-java")
     # chrome_options.add_argument("disable-infobars")
