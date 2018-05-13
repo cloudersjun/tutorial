@@ -5,6 +5,9 @@ import sys
 from datetime import datetime, timedelta
 
 import scrapy
+from scrapy import settings
+import scrapy.spiders
+from scrapy import Spider
 import scrapy.core.downloader
 import scrapy.core.downloader.contextfactory
 import scrapy.core.downloader.handlers.http
@@ -62,9 +65,13 @@ from scrapy.utils.project import get_project_settings
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
+
 from scrapy_xc.handle_input import HandleInput
 from scrapy_xc.handle_output import HandleOutput
 from scrapy_xc.handler_parse import HandleParse
+import scrapy_xc.spiders
+import scrapy_xc.settings
+from scrapy_xc.middlewares import downloadwebkit
 
 # 通过下面的方式进行简单配置输出方式与日志级别
 logging.basicConfig(filename='logger.log', level=logging.DEBUG,
@@ -77,7 +84,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 
-class DmozSpider(scrapy.Spider):
+class DmozSpider(Spider):
     name = 'dmoz'
     file_path = "./"
     logging.info('start init....')
@@ -117,7 +124,7 @@ class DmozSpider(scrapy.Spider):
     # chrome_options.add_argument("disable-infobars")
     # chrome_options.add_argument("--disable-extensions")
     # chrome_options.add_argument('--headless')
-    driver = webdriver.Chrome(executable_path="./chromedriver", chrome_options=chrome_options)
+    driver = webdriver.Chrome(executable_path="./chromedriver.exe", chrome_options=chrome_options)
     # driver = webdriver.Chrome(executable_path="./chromedriver.exe")
     # driver.maximize_window()
     # driver.fullscreen_window()
@@ -141,12 +148,6 @@ class DmozSpider(scrapy.Spider):
     def parse(self, response):
         input_item = response.meta["item_info"]
         # logging.debug(input_item)
-        # if input_item["name"] == '上海中航虹桥机场泊悦酒店(中国国际航空公司)' \
-        #         or input_item["name"]=='上海新虹桥希尔顿花园酒店' \
-        #         or input_item['name']=='希岸酒店(上海虹桥机场国展中心店)':
-        # with open(input_item["name"] + "_" + input_item["start_date"] + "_" + input_item["end_date"] + ".html",
-        #           'w') as f:
-        #     f.write(response.body)
         parse = HandleParse(response, datetime.strptime(input_item["start_date"], "%Y-%m-%d"),
                             datetime.strptime(input_item["end_date"], "%Y-%m-%d"), input_item["room_type"],
                             input_item["name"])
