@@ -5,6 +5,7 @@ import random
 import sys
 import time
 from random import choice
+import ConfigParser
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -75,17 +76,10 @@ def dom_change(start_date, end_date, driver):
 
 class HandleRequest(object):
     def process_request(self, request, spider):
-        # ua = random_ua()
-        # if ua:
-        #     request.headers.setdefault('User-Agent', ua)
-        # request.headers.setdefault('User-Agent', "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36")
         input_item = request.meta["item_info"]
-        # request.meta["proxy"] = input_item["proxy"]
-        # referer = str(input_item['hotel_url']).split('#')[0]
-        # logging.info("referer:" + referer)
-        # request.headers.setdefault('Referer', referer)
         spider.driver.get(request.url)
-        time.sleep(random.randint(5, 6))
+        seconds_kv = self.getRandomSeconds()
+        time.sleep(random.randint(seconds_kv["start"], seconds_kv["end"]))
         spider.driver.execute_script("scroll(0," + random.randint(580, 600).__str__() + ");")
         now_day = str(datetime.date.today())
         tomorrow = str(datetime.date.today() + datetime.timedelta(days=1))
@@ -93,7 +87,7 @@ class HandleRequest(object):
         if now_day != input_item["start_date"] or tomorrow != input_item["end_date"]:
             dom_change(input_item["start_date"], input_item["end_date"], spider.driver)
             click(spider.driver)
-            time.sleep(random.randint(5, 6))
+            time.sleep(random.randint(seconds_kv["start"], seconds_kv["end"]))
         string = spider.driver.page_source
         string = string.decode("utf-8", "ignore").encode("utf-8", "ignore")
         rendered_body = string
@@ -104,3 +98,11 @@ class HandleRequest(object):
         # logging.debug("提取到酒店房间数组：{}"+str(div_dom))
         return HtmlResponse(request.url, body=str(div_dom[0]).decode("utf-8", "ignore").encode("utf-8", "ignore"),
                             encoding='utf-8')
+
+    def getRandomSeconds(self):
+        conf = ConfigParser.ConfigParser()
+        conf.read("settings.ini")
+        kv = {}
+        kv["start"] = conf.get("random_seconds","start")
+        kv["end"] = conf.get("random_seconds","end")
+        return kv
