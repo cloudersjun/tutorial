@@ -79,7 +79,7 @@ class HandleRequest(object):
         input_item = request.meta["item_info"]
         spider.driver.get(request.url)
         seconds_kv = self.getRandomSeconds()
-        time.sleep(random.randint(seconds_kv["start"], seconds_kv["end"]))
+        time.sleep(random.randint(int(seconds_kv["start"]), int(seconds_kv["end"])))
         spider.driver.execute_script("scroll(0," + random.randint(580, 600).__str__() + ");")
         now_day = str(datetime.date.today())
         tomorrow = str(datetime.date.today() + datetime.timedelta(days=1))
@@ -87,7 +87,7 @@ class HandleRequest(object):
         if now_day != input_item["start_date"] or tomorrow != input_item["end_date"]:
             dom_change(input_item["start_date"], input_item["end_date"], spider.driver)
             click(spider.driver)
-            time.sleep(random.randint(seconds_kv["start"], seconds_kv["end"]))
+            time.sleep(random.randint(int(seconds_kv["start"]), int(seconds_kv["end"])))
         string = spider.driver.page_source
         string = string.decode("utf-8", "ignore").encode("utf-8", "ignore")
         rendered_body = string
