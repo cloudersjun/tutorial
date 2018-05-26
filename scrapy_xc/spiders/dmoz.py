@@ -52,6 +52,7 @@ import scrapy.spidermiddlewares.httperror
 import scrapy.spidermiddlewares.offsite
 import scrapy.spidermiddlewares.referer
 import scrapy.spidermiddlewares.urllength
+import scrapy.spiders
 import scrapy.squeues
 import scrapy.statscollectors
 import scrapy.utils.conf
@@ -60,11 +61,11 @@ import scrapy.utils.engine
 import scrapy.utils.project
 import scrapy.utils.python
 import scrapy.utils.template
+from scrapy import Spider
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-
 
 from scrapy_xc.handle_input import HandleInput
 from scrapy_xc.handle_output import HandleOutput
@@ -83,22 +84,21 @@ logging.basicConfig(filename='logger.log', level=logging.DEBUG,
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+handle_input = HandleInput()
+input_array = handle_input.ret_array
+out_map = {}
+file_header = ["name", "room_type"]
+
 
 class DmozSpider(Spider):
     name = 'dmoz'
-    file_path = "./"
     logging.info('start init....')
-    file_name = "result.xlsx"
-    handle_input = HandleInput()
     # handle_ip = Handle_ip()
     # 爬取ip到文件
     # handle_ip.crawl_ips()
     # 将ip加载到内存
     # handle_ip.load_ip()
     # {"name":，"room_type":,"price_dic":{"date":,"price":}]}
-    global out_map
-    out_map = {}
-    file_header = ["name", "room_type"]
     max_date = None
     min_date = None
     logging.info("init browser....")
@@ -112,11 +112,6 @@ class DmozSpider(Spider):
     # prefs = {"profile.default_content_settings.cookies": 2, "profile.use-new-accept-language-header": 2}
     chrome_options.add_experimental_option("prefs", prefs)
     chrome_options.add_argument("lang=zh-CN;en-Us;en;zh;zh-TW")
-    # chrome_options.add_argument("-use-new-accept-language-header")
-
-    # chrome_options.add_argument("--disable-local-storage")
-    # chrome_options.add_argument("--use-new-accept-language-header")
-    # chrome_options.add_argument("--disable-session-storage")、
     chrome_options.add_argument("--start-maximized")
     chrome_options.add_argument('disable-infobars')
     # chrome_options.add_argument("--incognito")
@@ -128,14 +123,11 @@ class DmozSpider(Spider):
     # driver = webdriver.Chrome(executable_path="./chromedriver.exe")
     # driver.maximize_window()
     # driver.fullscreen_window()
-    # 携带cookie打开
-    # driver.add_cookie({'name': 'ABC', 'value': 'DEF'})
-    input_array = handle_input.ret_array
     meta_info = {}
 
     def start_requests(self):
-        logging.info(u"爬取输入数组:" + json.dumps(self.input_array, ensure_ascii=False, encoding="gb2312"))
-        for input_item in self.input_array:
+        logging.info(u"爬取输入数组:" + json.dumps(input_array, ensure_ascii=False, encoding="gb2312"))
+        for input_item in input_array:
             if self.min_date is None or self.min_date > datetime.strptime(input_item["start_date"], "%Y-%m-%d"):
                 self.min_date = datetime.strptime(input_item["start_date"], "%Y-%m-%d")
             if self.max_date is None or self.max_date < datetime.strptime(input_item["end_date"], "%Y-%m-%d"):
@@ -147,25 +139,30 @@ class DmozSpider(Spider):
 
     def parse(self, response):
         input_item = response.meta["item_info"]
-        # logging.debug(input_item)
+        logging.debug(input_item)
         parse = HandleParse(response, datetime.strptime(input_item["start_date"], "%Y-%m-%d"),
                             datetime.strptime(input_item["end_date"], "%Y-%m-%d"), input_item["room_type"],
                             input_item["name"])
+        global out_map
         parse.parse(out_map)
+        logging.info(json.dumps(out_map, ensure_ascii=False, encoding="gb2312"))
 
     def close(self, reason):
-        logging.info(u"close brower")
-        self.driver.close()
         temp_date = self.min_date
         while temp_date < self.max_date:
-            self.file_header.append(temp_date.strftime("%Y-%m-%d"))
+            file_header.append(temp_date.strftime("%Y-%m-%d"))
             temp_date += timedelta(days=1)
+        file_path = "./"
+        now = datetime.now().strftime("%Y%m%d %H%M%S")
+        file_name = now.replace(" ", "_") + ".xlsx"
         logging.info(u"解析结果dic:" + json.dumps(out_map, ensure_ascii=False, encoding="gb2312"))
-        handle_output = HandleOutput(self.file_path, self.file_name, self.file_header, out_map,
-                                     self.input_array)
+        logging.info(u"最终写入文件：" + file_name)
+        handle_output = HandleOutput(file_path, file_name, file_header, out_map, input_array)
         handle_output.write()
+        logging.info(u"close browser:")
+        self.driver.close()
 
 
 process = CrawlerProcess(get_project_settings())
 process.crawl(DmozSpider)
-process.start(stop_after_crawl=True)
+process.start()
