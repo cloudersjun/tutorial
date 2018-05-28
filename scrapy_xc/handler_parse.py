@@ -114,6 +114,11 @@ class HandleParse():
                 hours = self.get_confirm_time(confirm_text)
                 if(hours > 1):
                     return False
+        room_type_elements = tr.xpath(".//a[contains(@class,'room_unfold')]")
+        if(len(room_type_elements) > 0):
+            room_type_text = room_type_elements[0].root.text.replace("\n"," ").replace(" ","")
+            if("无窗" in room_type_text):
+                return False
         return  True
 
 
