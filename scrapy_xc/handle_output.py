@@ -45,11 +45,16 @@ class HandleOutput:
                         sheet.write(row, i, 2500, red_format)
                 else:
                     for i in xrange(2, len(self.header)):
+                        need_comment = False
+                        comment = ""
                         price_date = self.header[i]
                         if price_info_map.get(price_date) is None:
                             pass
                         else:
                             price_info = price_info_map.get(price_date)
+                            if price_info["hour"] is not None and price_info["hour"] == 1:
+                                need_comment = True
+                                comment += u"一小时确认"
                             price = price_info["price"]
                             if int(price) == -1:
                                 sheet.write(row, i, 2500, red_format)
@@ -60,16 +65,10 @@ class HandleOutput:
                                     sheet.write(row, i, price)
                                 else:
                                     sheet.write(row, i, price)
-                                    sheet.write_comment(row, i,  room_type)
-
+                                    need_comment = True
+                                    comment += room_type
+                            if need_comment:
+                                sheet.write_comment(row, i, comment)
             already_set.add(room_name)
             row += 1
         book.close()
-
-    def handle_no_result_row(self, sheet, row, room_input_info, red_format):
-        sheet.write(row, 0, room_input_info["name"])
-        sheet.write(row, 1, room_input_info["room_type"])
-        for i in xrange(2, len(self.header)):
-            sheet.write(row, i, 2500, red_format)
-    def handle_no_result_cell(self, sheet, row,col, room_input_info, red_format):
-        sheet.write(row, col, 2500, red_format)
