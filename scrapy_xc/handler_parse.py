@@ -27,7 +27,8 @@ class HandleParse():
         room_type = ""
         min_room_type = ""
         date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')]={}
-        if(len(self.response.xpath(".//div[contains(@class,'tips_unresult')]"))>0 and len(self.response.xpath("//tr[@brid]"))):
+        if(len(self.response.xpath("//tr[@brid]")) == 0):
+            date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][self.room_type] = {}
             date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][self.room_type]["price"]=0
             date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][self.room_type]["hour"] = 0
             min_room_type = self.room_type
@@ -81,8 +82,8 @@ class HandleParse():
             date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')] = {}
             room_type = ""
             min_room_type = ""
-            if (len(self.response.xpath(".//div[contains(@class,'tips_unresult')]")) > 0 and len(
-                    self.response.xpath("//tr[@brid]"))):
+            if (len(self.response.xpath("//tr[@brid]")) == 0):
+                date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][self.room_type] = {}
                 date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][self.room_type]["price"] = 0
                 date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][self.room_type]["hour"] = 0
                 min_room_type = self.room_type
