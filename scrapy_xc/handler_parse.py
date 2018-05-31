@@ -32,12 +32,17 @@ class HandleParse():
             date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][self.room_type]["hour"] = 0
             min_room_type = self.room_type
         else:
+            isNotHasWindow = False
             for tr in self.response.xpath("//tr[@brid]"):
                 if(len(tr.xpath(".//td[contains(@class,'room_type')]")) > 0):
+                    isNotHasWindow = False
                     room_type = tr.xpath(".//td[contains(@class,'room_type')]")[0].xpath(".//a[contains(@class,'room_unfold')]")[0].root.text.replace("\n","").replace(" ","")
+                    if ("无窗" in room_type):
+                        isNotHasWindow = True
+                        continue
                     if(min_room_type==""):
                         min_room_type = room_type
-                if(self.check_tr(tr)):
+                if(self.check_tr(tr) and not isNotHasWindow):
                     price = float(tr.xpath(".//td[contains(@class,'child_name')]")[0].xpath("@data-price")[0].extract())
                     if(price == 0):
                         continue
@@ -82,14 +87,19 @@ class HandleParse():
                 date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][self.room_type]["hour"] = 0
                 min_room_type = self.room_type
             else:
+                isNotHasWindow = False
                 for tr in self.response.xpath("//tr[@brid]"):
                     if (len(tr.xpath(".//td[contains(@class,'room_type')]")) > 0):
+                        isNotHasWindow = False
                         room_type = \
                         tr.xpath(".//td[contains(@class,'room_type')]")[0].xpath(".//a[contains(@class,'room_unfold')]")[
                             0].root.text.replace("\n", "").replace(" ", "")
+                        if("无窗" in room_type):
+                            isNotHasWindow = True
+                            continue
                         if (min_room_type == ""):
                             min_room_type = room_type
-                    if (self.check_tr(tr)):
+                    if (self.check_tr(tr) and not isNotHasWindow):
                         price_more = json.loads(re.sub(r"{(\w+?):", r"{'\1' :",re.sub(r",(\w+?):", r",'\1' :",re.sub(r"\$\('#(\w+?)'\).value\(\)", r"'test'",str(tr.xpath(".//span[contains(@class,'base_txtdiv')]")[0].xpath("@data-params")[0].extract())))).replace("'","\""))
                         price_str = price_more["options"]["content"]["info"]["1"]["1"][num]["price"]
                         price = -1
