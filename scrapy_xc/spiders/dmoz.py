@@ -152,7 +152,7 @@ class DmozSpider(Spider):
         while temp_date < self.max_date:
             file_header.append(temp_date.strftime("%Y-%m-%d"))
             temp_date += timedelta(days=1)
-        file_path = "./"
+        file_path = "./result/"
         now = datetime.now().strftime("%Y%m%d %H%M%S")
         file_name = now.replace(" ", "_") + ".xlsx"
         logging.info(u"解析结果dic:" + json.dumps(out_map, ensure_ascii=False, encoding="gb2312"))
