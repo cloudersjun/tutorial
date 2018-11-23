@@ -120,7 +120,7 @@ class DmozSpider(Spider):
     # chrome_options.add_argument("--disable-extensions")
     # chrome_options.add_argument('--headless')
     driver = webdriver.Chrome(executable_path="./chromedriver.exe", chrome_options=chrome_options)
-    # driver = webdriver.Chrome(executable_path="./chromedriver.exe")
+    # driver = webdriver.Chrome(executable_path="./chromedriver")
     # driver.maximize_window()
     # driver.fullscreen_window()
     meta_info = {}

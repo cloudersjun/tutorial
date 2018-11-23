@@ -14,6 +14,7 @@ class HandleParse():
         self.end_time = end_time
         self.room_type = room_type
         self.name = name
+        self.price_annotation = "@data-pricedisplay"
 
 
     def parse(self,out_dic):
@@ -44,7 +45,8 @@ class HandleParse():
                     if(min_room_type==""):
                         min_room_type = room_type
                 if(self.check_tr(tr) and not isNotHasWindow):
-                    price = float(tr.xpath(".//td[contains(@class,'child_name')]")[0].xpath("@data-price")[0].extract())
+                    # price = float(tr.xpath(".//td[contains(@class,'child_name')]")[0].xpath("@data-price")[0].extract())
+                    price = float(tr.xpath(".//td[contains(@class,'child_name')]")[0].xpath(self.price_annotation)[0].extract())
                     if(price == 0):
                         continue
                     if(date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')].has_key(room_type)):
@@ -141,7 +143,7 @@ class HandleParse():
     def check_tr(self, tr):
         if(len(tr.xpath(".//td[contains(@class,'child_name')]"))==0):
             return False
-        if(len(tr.xpath(".//td[contains(@class,'child_name')]")[0].xpath("@data-price"))==0):
+        if(len(tr.xpath(".//td[contains(@class,'child_name')]")[0].xpath(self.price_annotation))==0):
             return False
         if(len(tr.xpath(".//td[contains(@class,'child_name')]")[0].xpath("@data-hourroom")) > 0):
             return False
