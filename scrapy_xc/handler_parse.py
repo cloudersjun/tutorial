@@ -14,7 +14,8 @@ class HandleParse():
         self.end_time = end_time
         self.room_type = room_type
         self.name = name
-        self.price_annotation = "@data-pricedisplay"
+        # self.price_annotation = "@data-pricedisplay"
+        self.price_annotation = "@data-price"
 
 
     def parse(self,out_dic):
