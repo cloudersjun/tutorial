@@ -96,7 +96,7 @@
                 /*if(/msie 7/i.test(navigator.userAgent)){
             list[6] += (+!!document.importNode)
         }*/
-                if (window['document']['$cdc_asdjflas' + 'utopfhvcZLmcfl_']) {
+                if (window['document']['$cdc_asdjflasutopfhvcZLmcfl_']) {
                     list[3] += 2;
                 }
                 if (location.href.indexOf('http://hotels.ctrip.com') != -1) {
