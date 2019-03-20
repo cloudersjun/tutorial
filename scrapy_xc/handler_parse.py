@@ -154,6 +154,12 @@ class HandleParse():
             return False
         if(tr.xpath(".//div[contains(@class,'btns_base22_main')]")[0].root.text.replace(" ","") == "订完"):
             return False
+        label_onsale_blue_elements = tr.xpath(".//span[contains(@class,'label_onsale_blue')]")
+        if len(label_onsale_blue_elements) > 0 :
+            for label_onsale_blue_element in label_onsale_blue_elements :
+                onsale_text = label_onsale_blue_element.root.text.replace("\n"," ").replace(" ","")
+                if "代理" in onsale_text :
+                    return False
         confirm_green_elements = tr.xpath(".//span[contains(@class,'confirm_green')]")
         if(len(confirm_green_elements) > 0):
             confirm_text = confirm_green_elements[0].root.text.replace("\n"," ").replace(" ","")
