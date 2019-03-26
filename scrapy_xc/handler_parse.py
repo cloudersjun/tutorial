@@ -30,10 +30,16 @@ class HandleParse():
         min_room_type = ""
         date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')]={}
         if(len(self.response.xpath("//tr[@brid]")) == 0):
-            date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][self.room_type] = {}
-            date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][self.room_type]["price"]=0
-            date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][self.room_type]["hour"] = 0
-            min_room_type = self.room_type
+            if (len(self.response.xpath(".//div[contains(@class,'room_list_loading')]")) == 0):
+                date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][self.room_type] = {}
+                date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][self.room_type]["price"] = "-1"
+                date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][self.room_type]["hour"] = 0
+                min_room_type = self.room_type
+            else:
+                date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][self.room_type] = {}
+                date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][self.room_type]["price"]=0
+                date_roomtype_minPrice_dic[self.start_time.strftime('%Y-%m-%d')][self.room_type]["hour"] = 0
+                min_room_type = self.room_type
         else:
             isNotHasWindow = False
             for tr in self.response.xpath("//tr[@brid]"):
@@ -86,10 +92,16 @@ class HandleParse():
             room_type = ""
             min_room_type = ""
             if (len(self.response.xpath("//tr[@brid]")) == 0):
-                date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][self.room_type] = {}
-                date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][self.room_type]["price"] = 0
-                date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][self.room_type]["hour"] = 0
-                min_room_type = self.room_type
+                if (len(self.response.xpath(".//div[contains(@class,'room_list_loading')]")) == 0):
+                    date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][self.room_type] = {}
+                    date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][self.room_type]["price"] = "-1"
+                    date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][self.room_type]["hour"] = 0
+                    min_room_type = self.room_type
+                else:
+                    date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][self.room_type] = {}
+                    date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][self.room_type]["price"] = 0
+                    date_roomtype_minPrice_dic[date.strftime('%Y-%m-%d')][self.room_type]["hour"] = 0
+                    min_room_type = self.room_type
             else:
                 isNotHasWindow = False
                 for tr in self.response.xpath("//tr[@brid]"):
@@ -154,12 +166,12 @@ class HandleParse():
             return False
         if(tr.xpath(".//div[contains(@class,'btns_base22_main')]")[0].root.text.replace(" ","") == "订完"):
             return False
-        label_onsale_blue_elements = tr.xpath(".//span[contains(@class,'label_onsale_blue')]")
-        if len(label_onsale_blue_elements) > 0 :
-            for label_onsale_blue_element in label_onsale_blue_elements :
-                onsale_text = label_onsale_blue_element.root.text.replace("\n"," ").replace(" ","")
-                if "代理" in onsale_text :
-                    return False
+        # label_onsale_blue_elements = tr.xpath(".//span[contains(@class,'label_onsale_blue')]")
+        # if len(label_onsale_blue_elements) > 0 :
+        #     for label_onsale_blue_element in label_onsale_blue_elements :
+        #         onsale_text = label_onsale_blue_element.root.text.replace("\n"," ").replace(" ","")
+        #         if "代理" in onsale_text :
+        #             return False
         confirm_green_elements = tr.xpath(".//span[contains(@class,'confirm_green')]")
         if(len(confirm_green_elements) > 0):
             confirm_text = confirm_green_elements[0].root.text.replace("\n"," ").replace(" ","")
